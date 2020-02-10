@@ -195,29 +195,18 @@
         "networkSecurityGroupName" : "[concat(variables('rgname'), '-mgmt-nsg-', variables('namingInfix'))]",
         "MgmtSubnetName" : "[concat(parameters('virtualNetworkName'), '-mgmt-subnet')]",
         "dataSubnetName" : "[concat(parameters('virtualNetworkName'), '-data-subnet')]",
-        "FWILBSubnetName" : "[concat(parameters('virtualNetworkName'), '-fw-ilb-subnet')]",
-        "LoadBalancerType" : "layer-7",
-        "firewallVmCount" : 2,
         "baseUrl" : "https://raw.githubusercontent.com/rhartnett1233/pan_temp_repo/master/single-arm",
         "nsgURL" : "[concat(variables('baseUrl'),'/nsg-new.json')]",
         "vnetURL" : "[concat(variables('baseUrl'),'/deployVnet.json')]",
         "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseries.json')]",
         "appInsightsApiVersion": "2018-05-01", 
-        "appInsightsComponentsApiVersion": "2018-05-01",
-        "networkApiVersion": "2017-06-01",
-        "computeApiVersion": "2017-03-30",
         "appInsightsName": "[concat(variables('rgname'), '-appinsights-', variables('namingInfix'))]",
         "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
-        "nicNameWorker": "[concat('tempworkernic', variables('namingInfix'))]",
-        "workerName": "[concat('tempworker', variables('namingInfix'))]",
-        "appGatewayName": "[concat(variables('rgname'), '_appgw_', variables('namingInfix'))]",
-        "fwLbName": "[concat(variables('rgname'), '_fw_lb_', variables('namingInfix'))]", 
-        "appGwBackendPoolName": "[concat(variables('rgname'), '_appGwBepool_', variables('namingInfix'))]",
+        "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
+        "fwElbName": "[concat(variables('rgname'), '_fw_elb_', variables('namingInfix'))]",
         "fwLbBePoolName": "[concat(variables('rgname'), '_fw_lb_backend_pool_', variables('namingInfix'))]",
         "vmssName": "[concat('pavmfw', variables('namingInfix'))]",
-        "udrName": "defaultBackendUDR",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]",
-        "space": " "
     },
     "resources": [
         {
@@ -307,7 +296,10 @@
                 "name": "Standard",
                 "tier": "Regional"
             },
-            "name": "[variables('fwLbName')]",
+            "tags": {
+                "PanoramaManaged": "yes"
+            },
+            "name": "[variables('fwIlbName')]",
             "apiVersion": "2018-02-01",
             "location": "[variables('location')]",
             "properties": {
@@ -315,9 +307,10 @@
                     {
                         "name": "LoadBalancerFrontEnd",
                         "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[parameters('publicIPAddresses_lb_pub_inbound_ip_externalid')]"
+                            "privateIPAddress": "[parameters('fwLoadBalancerIP')]",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('untrustedSubnetName'))]"
                             }
                         }
                     }
@@ -344,7 +337,7 @@
                         "properties": {
                             "frontendIPConfiguration": {
 
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwLbName')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
                             },
                             "frontendPort": 0,
                             "backendPort": 0,
@@ -354,10 +347,10 @@
                             "loadDistribution": "Default",
                             "disableOutboundSnat": false,
                             "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwLbName')),'/backendAddressPools/', variables('fwLbBePoolName'))]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/backendAddressPools/', variables('fwLbBePoolName'))]"
                             },
                             "probe": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwLbName')),'/probes/fw_health_probe')]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/probes/fw_health_probe')]"
                             }
                         }
                     }
@@ -367,7 +360,7 @@
                 "inboundNatPools": []
             },
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupVNET"
+                "Microsoft.Resources/deployments/SetupPublicLoadBalancer"
             ]
         },
         {
@@ -420,8 +413,8 @@
                     "subnetNameData": {
                         "value": "[variables('dataSubnetName')]"
                     },
-                    "fwLbName": {
-                        "value": "[variables('fwLbName')]"
+                    "fwIlbName": {
+                        "value": "[variables('fwIlbName')]"
                     },
                     "fwLbBePoolName": {
                         "value": "[variables('fwLbBePoolName')]"

@@ -107,17 +107,11 @@
             "metadata": {
                 "description": "Data Subnet name"
             }
-        },/*
-        "subnetNameTrust": {
+        },
+        "fwIlbName": {
             "type": "string",
             "metadata": {
-                "description": "Trust Subnet name"
-            }
-        },*/
-        "fwLbName": {
-            "type": "string",
-            "metadata": {
-                "description": "Application Gateway Name"
+                "description": "FW ILB Name"
             }
         },
         "fwLbBePoolName": {
@@ -305,7 +299,7 @@
                                         },
                                         "loadBalancerBackendAddressPools": [
                                         {
-                                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwLbName'), '/backendAddressPools/', parameters('fwLbBePoolName'))]"
+                                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/', parameters('fwLbBePoolName'))]"
                                         }]
                                     }
                                 }]
