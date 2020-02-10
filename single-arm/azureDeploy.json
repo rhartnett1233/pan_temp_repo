@@ -268,7 +268,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupNSG",
+                "Microsoft.Resources/deployments/SetupNSG"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -297,7 +297,7 @@
                     },
                     "subnet1Prefix": {
                          "value": "[parameters('dataSubnetPrefix')]"
-                    },
+                    }
                 }
             }
         },
@@ -375,7 +375,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupVNET",
+                "Microsoft.Resources/deployments/SetupVNET"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -437,7 +437,7 @@
                     },
                     "scaleOutThreshold": {
                         "value": "[parameters('scaleOutThreshold')]"
-                    },
+                    }
                 }
              }
            }
