@@ -59,7 +59,7 @@
 			"properties": {
 				"frontendIPConfigurations": [
 					{
-						"name": "Frontend",
+						"name": "myfrontendoutbound",
 						"properties": {
 							"privateIPAllocationMethod": "Dynamic",
                             "privateIPAddressVersion": "IPv4",
@@ -86,7 +86,26 @@
                     }
 				],
 				"loadBalancingRules": [],
-				
+				"outboundRules": [
+                    {
+                        "name": "outboundrule",
+                        "properties": {
+                            "allocatedOutboundPorts": 10000,
+                            "protocol": "All",
+                            "enableTcpReset": false,
+                            "idleTimeoutInMinutes": 15,
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')), '/backendAddressPools/', parameters('fwELbBePoolName'))]"
+                            },
+                            "frontendIPConfigurations": [
+                                {
+                                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')), '/frontendIPConfigurations/myfrontendoutbound')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "inboundNatPools": []
 			}
 		}
 	],
