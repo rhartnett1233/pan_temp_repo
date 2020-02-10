@@ -13,29 +13,10 @@
 			},
 			"defaultValue": "Standard"
 		},
-		"location": {
-			"type": "string",
-			"metadata": {
-				"description": "Deployment location"
-			}
-		},
-
-		"virtualNetworkRG": {
-			"type": "string",
-			"metadata": {
-				"description": "Name of the Virtual Network Resource Group"
-			}
-		},
 		"virtualNetworkName": {
 			"type": "string",
 			"metadata": {
 				"description": "Name of the Virtual Network (VNET)"
-			}
-		},
-		"subnetName": {
-			"type": "string",
-			"metadata": {
-				"description": "Name of the subnet"
 			}
 		},
 		"loadBalancerName": {
@@ -44,13 +25,13 @@
 				"description": "Name of the inbound load balancer"
 			}
 		},
-		"loadBalancerIP": {
+		"loadBalancerPublicIP": {
 			"type": "string",
 			"metadata": {
 				"description": "IP Address of the inbound load balancer in the Trust network"
 			}
 		},
-		"fwLbBePoolName": {
+		"fwELbBePoolName": {
 			"type": "string",
 			"metadata": {
 				"description": "Backend pool name of the load balancer"
@@ -60,7 +41,9 @@
 
 	"variables": {
 		"vnetId": "[resourceId(parameters('virtualNetworkRG'), 'Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-		"lbId": "[resourceId('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))]"
+		"lbId": "[resourceId('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))]",
+		"location": "[resourceGroup().location]",
+		"rgname": "[resourceGroup().id]",
 	},
 
 	"resources": [
@@ -68,10 +51,7 @@
 			"apiVersion": "2017-08-01",
 			"type": "Microsoft.Network/loadBalancers",
 			"name": "[parameters('loadBalancerName')]",
-			"location": "[parameters('location')]",
-            "tags": {
-                "PanoramaManaged": "yes"
-            },
+			"location": "[variables('location')]",
             "sku":
             {
                 "name": "[parameters('loadBalancerSku')]"
@@ -81,51 +61,32 @@
 					{
 						"name": "Frontend",
 						"properties": {
-							"subnet": {
-								"id": "[concat(variables('vnetId'),'/subnets/',parameters ('subnetName'))]"
-							},
-							"privateIPAllocationMethod": "Static",
-							"privateIPAddress": "[parameters('loadBalancerIP')]" 
+							"privateIPAllocationMethod": "Dynamic",
+                            "privateIPAddressVersion": "IPv4",
+                            "publicIPAddress": {
+                                "id": "[parameters('loadBalancerPublicIP')]"
+                            }
 						}
 					}
 				],
 				"backendAddressPools": [
 					{
-						"name": "[parameters('fwLbBePoolName')]"
-					}
-				],
-				"loadBalancingRules": [
-					{
-						"properties": {
-							"frontendIPConfiguration": {
-								"id": "[concat(variables('lbId'), '/frontendIpConfigurations/Frontend')]"
-							},
-							"backendAddressPool": {
-								"id": "[concat(variables('lbId'), '/backendAddressPools/', parameters('fwLbBePoolName'))]"
-							},
-							"probe": {
-								"id": "[concat(variables('lbId'), '/probes/lbprobe')]"
-							},
-							"protocol": "[if(equals(parameters('loadBalancerSku'), 'Standard'), 'All', 'Tcp')]",
-							"frontendPort": "[if(equals(parameters('loadBalancerSku'), 'Standard'), 0, 80)]",
-							"backendPort": "[if(equals(parameters('loadBalancerSku'), 'Standard'), 0, 80)]",
-							"enableFloatingIP": false,
-							"idleTimeoutInMinutes": 4
-						},
-						"Name": "lbrule"
+						"name": "[parameters('fwELbBePoolName')]"
 					}
 				],
 				"probes": [
 					{
-						"properties": {
-							"protocol": "Tcp",
-							"port": 80,
-							"intervalInSeconds": 15,
-							"numberOfProbes": 2
-						},
-						"name": "lbprobe"
-					}
-				]
+                        "name": "fw_health_probe",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 80,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+				],
+				"loadBalancingRules": [],
+				
 			}
 		}
 	],

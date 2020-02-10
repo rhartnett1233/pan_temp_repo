@@ -204,7 +204,8 @@
         "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
         "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
         "fwElbName": "[concat(variables('rgname'), '_fw_elb_', variables('namingInfix'))]",
-        "fwLbBePoolName": "[concat(variables('rgname'), '_fw_lb_backend_pool_', variables('namingInfix'))]",
+        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', variables('namingInfix'))]",
+        "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', variables('namingInfix'))]",
         "vmssName": "[concat('pavmfw', variables('namingInfix'))]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
@@ -310,14 +311,14 @@
                             "privateIPAddress": "[parameters('fwLoadBalancerIP')]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('untrustedSubnetName'))]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('dataSubnetName'))]"
                             }
                         }
                     }
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "[variables('fwLbBePoolName')]"
+                        "name": "[variables('fwIlbBePoolName')]"
                     }
                 ],
                 "probes": [
@@ -347,7 +348,7 @@
                             "loadDistribution": "Default",
                             "disableOutboundSnat": false,
                             "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/backendAddressPools/', variables('fwLbBePoolName'))]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/backendAddressPools/', variables('fwIlbBePoolName'))]"
                             },
                             "probe": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/probes/fw_health_probe')]"
@@ -366,10 +367,7 @@
                 "name": "Standard",
                 "tier": "Regional"
             },
-            "tags": {
-                "PanoramaManaged": "yes"
-            },
-            "name": "[variables('fwIlbName')]",
+            "name": "[variables('fwElbName')]",
             "apiVersion": "2018-02-01",
             "location": "[variables('location')]",
             "properties": {
@@ -377,17 +375,18 @@
                     {
                         "name": "LoadBalancerFrontEnd",
                         "properties": {
-                            "privateIPAddress": "[parameters('fwLoadBalancerIP')]",
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('untrustedSubnetName'))]"
+                            "privateIPAllocationMethod": "Dynamic",
+                            "privateIPAddressVersion": "IPv4",
+                            "publicIPAddress": {
+                                //TODO
+                                "id": "[parameters('publicIPAddresses_lb_pub_inbound_ip_externalid')]"
                             }
                         }
                     }
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "[variables('fwLbBePoolName')]"
+                        "name": "[variables('fwElbBePoolName')]"
                     }
                 ],
                 "probes": [
@@ -401,30 +400,7 @@
                         }
                     }
                 ],
-                "loadBalancingRules": [
-                    {
-                        "name": "lbrule",
-                        "properties": {
-                            "frontendIPConfiguration": {
-
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
-                            },
-                            "frontendPort": 0,
-                            "backendPort": 0,
-                            "enableFloatingIP": false,
-                            "idleTimeoutInMinutes": 4,
-                            "protocol": "All",
-                            "loadDistribution": "Default",
-                            "disableOutboundSnat": false,
-                            "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/backendAddressPools/', variables('fwLbBePoolName'))]"
-                            },
-                            "probe": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/probes/fw_health_probe')]"
-                            }
-                        }
-                    }
-                ],
+                "loadBalancingRules": [],
                 "inboundNatRules": [],
                 "outboundRules": [],
                 "inboundNatPools": []
@@ -483,8 +459,8 @@
                     "fwIlbName": {
                         "value": "[variables('fwIlbName')]"
                     },
-                    "fwLbBePoolName": {
-                        "value": "[variables('fwLbBePoolName')]"
+                    "fwIlbBePoolName": {
+                        "value": "[variables('fwIlbBePoolName')]"
                     },
                     "appInsightsName": {
                         "value": "[variables('appInsightsName')]"
