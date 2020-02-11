@@ -204,7 +204,7 @@
         "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
         "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
         "fwElbName": "[concat(variables('rgname'), '_fw_elb_', variables('namingInfix'))]",
-        "fwLbBePoolName": "[concat(variables('rgname'), '_fw_lb_backend_pool_', variables('namingInfix'))]",
+        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_lb_backend_pool_', variables('namingInfix'))]",
         "vmssName": "[concat('pavmfw', variables('namingInfix'))]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
@@ -317,7 +317,7 @@
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "[variables('fwLbBePoolName')]"
+                        "name": "[variables('fwIlbBePoolName')]"
                     }
                 ],
                 "probes": [
@@ -347,7 +347,7 @@
                             "loadDistribution": "Default",
                             "disableOutboundSnat": false,
                             "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/backendAddressPools/', variables('fwLbBePoolName'))]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/backendAddressPools/', variables('fwIlbBePoolName'))]"
                             },
                             "probe": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/probes/fw_health_probe')]"
@@ -413,8 +413,8 @@
                     "fwIlbName": {
                         "value": "[variables('fwIlbName')]"
                     },
-                    "fwLbBePoolName": {
-                        "value": "[variables('fwLbBePoolName')]"
+                    "fwIlbBePoolName": {
+                        "value": "[variables('fwIlbBePoolName')]"
                     },
                     "appInsightsName": {
                         "value": "[variables('appInsightsName')]"
