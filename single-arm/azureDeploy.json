@@ -12,7 +12,7 @@
         "fwLoadBalancerIP": {
             "type": "string",
             "metadata": {
-                "description": "IP Address of the Internal Load Balancer in front of the firewall. This should be an IP in the Data subnet."
+                "description": "IP Address of the Internal Load Balancer in front of the firewall. This should be an IP in the Untrust subnet."
             }
         },
         "virtualNetworkName": {
@@ -41,13 +41,6 @@
             "defaultValue": "192.168.1.0/24",
             "metadata": {
                 "description": "CIDR for Data Subnet."
-            }
-        },
-        "trustSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "192.168.2.0/24",
-            "metadata": {
-                "description": "CIDR for Trust Subnet."
             }
         },
         "FWILBSubnetPrefix": {
@@ -199,12 +192,15 @@
         "nsgURL" : "[concat(variables('baseUrl'),'/nsg-new.json')]",
         "vnetURL" : "[concat(variables('baseUrl'),'/deployVnet.json')]",
         "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseries.json')]",
+        "ilbURL" : "[concat(variables('baseUrl'),'/deployInternalLoadBalancer.json')]",
+        "elbURL" : "[concat(variables('baseUrl'),'/deployExternalLoadBalancer.json')]",
         "appInsightsApiVersion": "2018-05-01", 
         "appInsightsName": "[concat(variables('rgname'), '-appinsights-', variables('namingInfix'))]",
         "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
         "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
         "fwElbName": "[concat(variables('rgname'), '_fw_elb_', variables('namingInfix'))]",
-        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_lb_backend_pool_', variables('namingInfix'))]",
+        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', variables('namingInfix'))]",
+        "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', variables('namingInfix'))]",
         "vmssName": "[concat('pavmfw', variables('namingInfix'))]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
@@ -291,73 +287,91 @@
             }
         },
         {
-            "type": "Microsoft.Network/loadBalancers",
-            "sku": {
-                "name": "Standard",
-                "tier": "Regional"
-            },
-            "tags": {
-                "PanoramaManaged": "yes"
-            },
-            "name": "[variables('fwIlbName')]",
-            "apiVersion": "2018-02-01",
-            "location": "[variables('location')]",
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LoadBalancerFrontEnd",
-                        "properties": {
-                            "privateIPAddress": "[parameters('fwLoadBalancerIP')]",
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('dataSubnetName'))]"
-                            }
-                        }
+            "name": "SetupILB",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupVNET"
+            ],
+            "properties": { 
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('ilbURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('dataSubnetName')]"
+                    },
+                    "loadBalancerName": {
+                        "value": "[variables('fwIlbName')]"
+                    },
+                    "loadBalancerIP": {
+                        "value": "[parameters('fwLoadBalancerIP')]"
+                    },
+                    "fwILbBePoolName": {
+                        "value": "[variables('fwIlbBePoolName')]"
                     }
-                ],
-                "backendAddressPools": [
-                    {
-                        "name": "[variables('fwIlbBePoolName')]"
+                }
+            }
+        },
+        {
+            "name": "SetupPubIP",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupVNET"
+            ],
+            "properties": { 
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('elbURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "elbIPAddressName": {
+                        "value": "[variables('elbIPAddressName')]"
+                    },
+                    "elbDnsName": {
+                        "value": "[variables('elbDnsName')]"
+                    },
+                    "publicIPAddressType": {
+                        "value": "dynamic"
                     }
-                ],
-                "probes": [
-                    {
-                        "name": "fw_health_probe",
-                        "properties": {
-                            "protocol": "Tcp",
-                            "port": 80,
-                            "intervalInSeconds": 5,
-                            "numberOfProbes": 2
-                        }
+                }
+            }
+        }/*,
+        {
+            "name": "SetupELB",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupVNET",
+                "Microsoft.Resources/deployments/SetupPubIP"
+            ],
+            "properties": { 
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('elbURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "loadBalancerName": {
+                        "value": "[variables('fwElbName')]"
+                    },
+                    "loadBalancerPublicIP": {
+                        "value": "[parameters('networkSecurityGroupInboundSrcIP')]"
+                    },
+                    "fwELbBePoolName": {
+                        "value": "[variables('fwElbBePoolName')]"
                     }
-                ],
-                "loadBalancingRules": [
-                    {
-                        "name": "lbrule",
-                        "properties": {
-                            "frontendIPConfiguration": {
-
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
-                            },
-                            "frontendPort": 0,
-                            "backendPort": 0,
-                            "enableFloatingIP": false,
-                            "idleTimeoutInMinutes": 4,
-                            "protocol": "All",
-                            "loadDistribution": "Default",
-                            "disableOutboundSnat": false,
-                            "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/backendAddressPools/', variables('fwIlbBePoolName'))]"
-                            },
-                            "probe": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('fwIlbName')),'/probes/fw_health_probe')]"
-                            }
-                        }
-                    }
-                ],
-                "inboundNatRules": [],
-                "outboundRules": [],
-                "inboundNatPools": []
+                }
             }
         },
         {
@@ -429,11 +443,11 @@
                         "value": "[parameters('scaleOutThreshold')]"
                     }
                 }
-             }
-           }
-        ],
+            }
+        }*/
+    ],
     "outputs": {
-        "InboundFwVnetName": {
+        /*"InboundFwVnetName": {
             "value": "[parameters('virtualNetworkName')]",
             "type": "string"
         },
@@ -448,6 +462,6 @@
         "InboundFwLoadBalancerIP": {
             "value": "[parameters('fwLoadBalancerIP')]",
             "type": "string"
-        }
+        }*/
     }
 }

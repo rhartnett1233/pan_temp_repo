@@ -2,43 +2,41 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "location": {
+    "elbIPAddressName": {
       "type": "string"
     },
-    "MgmtPublicIPAddressName": {
-      "type": "string"
+    "elbDnsName" : {
+      "type" : "string"
     },
     "publicIPAddressType": {
       "type": "string"
     },
-    "baseUrl": {
-      "type": "string"
-    }
   },
   "variables": {
-    "mgmt": "[concat('mgmtIP-', parameters('MgmtPublicIPAddressName'))]"
+    "location": "[resourceGroup().location]",
+    "rgname": "[resourceGroup().id]"
   },
   "resources": [
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('mgmt')]",
-      "location": "[parameters('location')]",
+      "name": "[parameters('elbIPAddressName')]",
+      "location": "[variables('location')]",
       "properties": {
         "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('MgmtPublicIPAddressName')]"
+          "domainNameLabel": "[parameters('elbDnsName')]"
         }
       }
     }
   ],
   "outputs": {
     "publicIpId": {
-      "value": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),variables('mgmt'))]",
+      "value": "[resourceId(concat('Microsoft.Network','/','publicIPAddresses'),parameters('elbIPAddressName'))]",
       "type": "string"
     },
     "fqdn": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('mgmt')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('elbDnsName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[0]).dnsSettings.fqdn]",
       "type": "string"
     }
   }
