@@ -214,7 +214,7 @@
     },
     "variables": {
         "location" : "[resourceGroup().location]",
-        "namingInfix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
+        "namingInfix": "test1",
         "rgname" : "[resourceGroup().name]",
         "networkSecurityGroupName" : "[concat(variables('rgname'), '-mgmt-nsg-', variables('namingInfix'))]",
         "MgmtSubnetName" : "[concat(parameters('virtualNetworkName'), '-mgmt-subnet')]",
