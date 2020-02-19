@@ -353,6 +353,36 @@
                     }
                 }
             }
+        },
+        {
+            "name": "SetupELB",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupVNET",
+                "Microsoft.Resources/deployments/SetupPubIP"
+            ],
+            "properties": { 
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('elbURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "loadBalancerName": {
+                        "value": "[variables('fwElbName')]"
+                    },
+                    "loadBalancerPublicIP": {
+                        "value": "[parameters('networkSecurityGroupInboundSrcIP')]"
+                    },
+                    "fwELbBePoolName": {
+                        "value": "[variables('fwElbBePoolName')]"
+                    }
+                }
+            }
         }
     ],
     "outputs": {
