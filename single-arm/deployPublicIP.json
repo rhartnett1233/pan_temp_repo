@@ -22,6 +22,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[parameters('elbIPAddressName')]",
       "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard"
+      },
       "properties": {
         "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
         "dnsSettings": {
