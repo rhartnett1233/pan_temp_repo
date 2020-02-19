@@ -79,7 +79,7 @@
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "[variables('fwIlbBePoolName')]"
+                        "name": "[parameters('fwIlbBePoolName')]"
                     }
                 ],
                 "probes": [
@@ -109,7 +109,7 @@
                             "loadDistribution": "Default",
                             "disableOutboundSnat": false,
                             "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')),'/backendAddressPools/', variables('fwIlbBePoolName'))]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')),'/backendAddressPools/', parameters('fwIlbBePoolName'))]"
                             },
                             "probe": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')),'/probes/fw_health_probe')]"
