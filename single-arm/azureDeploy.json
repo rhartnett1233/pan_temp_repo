@@ -210,7 +210,7 @@
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', variables('namingInfix'))]",
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', variables('namingInfix'))]",
         "elbIPAddressName": "[concat(variables('rgname'), '_fw_elb_ip_', variables('namingInfix'))]",
-        "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com']",
+        "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
         "vmssName": "[concat('pavmfw', variables('namingInfix'))]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
