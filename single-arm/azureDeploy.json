@@ -194,6 +194,7 @@
         "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseries.json')]",
         "ilbURL" : "[concat(variables('baseUrl'),'/deployInternalLoadBalancer.json')]",
         "elbURL" : "[concat(variables('baseUrl'),'/deployExternalLoadBalancer.json')]",
+        "pubIpURL" : "[concat(variables('baseUrl'),'/deployPublicIP.json')]",
         "appInsightsApiVersion": "2018-05-01", 
         "appInsightsName": "[concat(variables('rgname'), '-appinsights-', variables('namingInfix'))]",
         "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
@@ -330,7 +331,7 @@
             "properties": { 
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('elbURL')]",
+                    "uri": "[variables('pubIpURL')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
