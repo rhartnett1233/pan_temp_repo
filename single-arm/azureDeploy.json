@@ -346,7 +346,7 @@
                         "value": "[variables('elbIPAddressName')]"
                     },
                     "elbDnsName": {
-                        "value": "[variables('elbDnsName')]"
+                        "value": "[parameters('elbDnsNamePrefix')]"
                     },
                     "publicIPAddressType": {
                         "value": "dynamic"
