@@ -65,7 +65,7 @@
 							"privateIPAllocationMethod": "Dynamic",
                             "privateIPAddressVersion": "IPv4",
                             "publicIPAddress": {
-                                "id": "[parameters('frontendConfig')]"
+                                "id": "[variables('frontendIpId')]"
                             }
 						}
 					}
