@@ -375,7 +375,7 @@
                     "loadBalancerName": {
                         "value": "[variables('fwElbName')]"
                     },
-                    "loadBalancerPublicIP": {
+                    "frontendIp": {
                         "value": "[variables('elbIPAddressName')]"
                     },
                     "fwELbBePoolName": {

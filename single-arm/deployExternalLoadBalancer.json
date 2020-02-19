@@ -25,7 +25,7 @@
 				"description": "Name of the inbound load balancer"
 			}
 		},
-		"loadBalancerPublicIP": {
+		"frontendIp": {
 			"type": "string",
 			"metadata": {
 				"description": "IP Address of the inbound load balancer in the Trust network"
@@ -42,6 +42,7 @@
 	"variables": {
 		"vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
 		"lbId": "[resourceId('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))]",
+		"frontendIpId": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('frontendIp'))]",
 		"location": "[resourceGroup().location]",
 		"rgname": "[resourceGroup().id]",
 	},
@@ -64,7 +65,7 @@
 							"privateIPAllocationMethod": "Dynamic",
                             "privateIPAddressVersion": "IPv4",
                             "publicIPAddress": {
-                                "id": "[parameters('loadBalancerPublicIP')]"
+                                "id": "[parameters('frontendConfig')]"
                             }
 						}
 					}
