@@ -10,7 +10,7 @@
     },
     "publicIPAddressType": {
       "type": "string"
-    },
+    }
   },
   "variables": {
     "location": "[resourceGroup().location]",
