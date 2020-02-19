@@ -376,7 +376,7 @@
                         "value": "[variables('fwElbName')]"
                     },
                     "loadBalancerPublicIP": {
-                        "value": "[parameters('networkSecurityGroupInboundSrcIP')]"
+                        "value": "[variables('elbIPAddressName')]"
                     },
                     "fwELbBePoolName": {
                         "value": "[variables('fwElbBePoolName')]"
