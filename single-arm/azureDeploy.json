@@ -50,6 +50,13 @@
                 "description": "CIDR for the FW ILB Subnet."
             }
         },
+        "elbDnsName" : {
+            "type": "string",
+            "defaultValue": "fwelbdnsname",
+            "metadata": {
+                "description": "DNS name for external FW load balancer."
+            }
+        },
         "vmSeriesFirewallModel": {
              "type": "string",
              "defaultValue": "byol",
@@ -203,7 +210,6 @@
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', variables('namingInfix'))]",
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', variables('namingInfix'))]",
         "elbIPAddressName": "[concat(variables('rgname'), '_fw_elb_ip_', variables('namingInfix'))]",
-        "elbDnsName": "[concat(variables('fwElbName'), variables('namingInfix'))]",
         "vmssName": "[concat('pavmfw', variables('namingInfix'))]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
@@ -339,7 +345,7 @@
                         "value": "[variables('elbIPAddressName')]"
                     },
                     "elbDnsName": {
-                        "value": "[variables('elbDnsName')]"
+                        "value": "[parameters('elbDnsName')]"
                     },
                     "publicIPAddressType": {
                         "value": "dynamic"
