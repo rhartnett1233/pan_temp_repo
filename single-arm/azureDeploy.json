@@ -349,7 +349,7 @@
                         "value": "[parameters('elbDnsNamePrefix')]"
                     },
                     "publicIPAddressType": {
-                        "value": "dynamic"
+                        "value": "Static"
                     }
                 }
             }
