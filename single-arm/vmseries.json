@@ -120,6 +120,18 @@
                 "description": "Application Gateway Backend Pool Name"
             }
         },
+        "fwElbName": {
+            "type": "string",
+            "metadata": {
+                "description": "FW ILB Name"
+            }
+        },
+        "fwElbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "Application Gateway Backend Pool Name"
+            }
+        },
         "appInsightsName": {
             "type": "string",
             "metadata": {
@@ -156,12 +168,6 @@
                 "description": "The Threshold above which FW VM scale out kicks in."
             }
         },
-        /*"vmLicenseHandlerUrl": {
-            "type": "string",
-            "metadata":{
-              "description": "Azure Function handler launched as part of the Service Bus template which handles VM licensing."
-            }
-        },*/
         "guidValue": {
             "type": "string",
             "defaultValue": "[newGuid()]"
@@ -219,9 +225,6 @@
             "name": "[parameters('vmssName')]",
             "location": "[resourceGroup().location]",
             "apiVersion": "2017-12-01",
-            /*"tags": {
-                "PanoramaManaged": "yes"
-            },*/
             "sku": {
                 "name": "[parameters('vmSize')]",
                 "tier": "Standard",
@@ -298,9 +301,13 @@
                                             "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'), '/subnets/', parameters('subnetNameData'))]"
                                         },
                                         "loadBalancerBackendAddressPools": [
-                                        {
-                                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/', parameters('fwIlbBePoolName'))]"
-                                        }]
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/', parameters('fwIlbBePoolName'))]"
+                                            },
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwElbName'), '/backendAddressPools/', parameters('fwElbBePoolName'))]"
+                                            }
+                                        ]
                                     }
                                 }]
                             }
@@ -373,19 +380,6 @@
                     }
                 ],
                 "notifications": [
-                /*{
-                    "operation": "Scale",
-                    "email": {
-                        "sendToSubscriptionAdministrator": false,
-                        "sendToSubscriptionCoAdministrators": false,
-                        "customEmails": []
-                    },
-                    "webhooks": [
-                        {
-                            "serviceUri": "[parameters('vmLicenseHandlerUrl')]" 
-                        }
-                    ]
-                }*/
                 ],
             "enabled": true,
             "targetResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('vmssName'))]"
