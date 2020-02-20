@@ -319,7 +319,7 @@
         {
             "type": "microsoft.insights/autoscalesettings",
             "name": "[variables('autoscaleName')]",
-            "apiVersion": "2014-04-01",
+            "apiVersion": "2017-12-01",
             "location": "[resourceGroup().location]",
             "tags": {
                 "PanoramaManaged": "Yes"
