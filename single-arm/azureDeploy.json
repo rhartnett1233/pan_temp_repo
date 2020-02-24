@@ -35,7 +35,7 @@
                     "metadata": {
                         "description": "CIDR for Management Subnet."
                     }
-        },
+            },
         "dataSubnetPrefix": {
             "type": "string",
             "defaultValue": "192.168.1.0/24",
@@ -204,11 +204,11 @@
         "baseUrl" : "https://raw.githubusercontent.com/rhartnett1233/pan_temp_repo/master/single-arm",
         "nsgURL" : "[concat(variables('baseUrl'),'/nsg-new.json')]",
         "vnetURL" : "[concat(variables('baseUrl'),'/deployVnet.json')]",
-        "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseriesOld.json')]",
+        "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseries.json')]",
+        "ilbURL" : "[concat(variables('baseUrl'),'/deployInternalLoadBalancer.json')]",
+        "elbURL" : "[concat(variables('baseUrl'),'/deployExternalLoadBalancer.json')]",
+        "pubIpURL" : "[concat(variables('baseUrl'),'/deployPublicIP.json')]",
         "appInsightsApiVersion": "2018-05-01", 
-        "appInsightsComponentsApiVersion": "2018-05-01",
-        "networkApiVersion": "2017-06-01",
-        "computeApiVersion": "2017-03-30",
         "appInsightsName": "[concat(variables('rgname'), '-appinsights-', variables('namingInfix'))]",
         "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
         "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
@@ -270,14 +270,10 @@
                 "parameters":  {}
             }
         },
-
         {
             "name": "SetupNSG",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/PublishCustomMetrics"
-            ],
             "properties": { 
                 "mode": "Incremental",
                 "templateLink": {
@@ -305,7 +301,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupNSG",
+                "Microsoft.Resources/deployments/SetupNSG"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -327,13 +323,13 @@
                          "value": "[variables('MgmtSubnetName')]"
                     },
                     "subnet1Name": {
-                         "value": "[variables('untrustedSubnetName')]"
+                         "value": "[variables('dataSubnetName')]"
                     },
                     "subnet0Prefix": {
                          "value": "[parameters('mgmtSubnetPrefix')]"
                     },
                     "subnet1Prefix": {
-                         "value": "[parameters('untrustSubnetPrefix')]"
+                         "value": "[parameters('dataSubnetPrefix')]"
                     }
                 }
             }
@@ -476,13 +472,13 @@
                         "value": "[variables('MgmtSubnetName')]"
                     },
                     "subnetNameData": {
-                        "value": "[variables('untrustedSubnetName')]"
+                        "value": "[variables('dataSubnetName')]"
                     },
                     "fwIlbName": {
-                        "value": "[variables('fwLbName')]"
+                        "value": "[variables('fwIlbName')]"
                     },
                     "fwIlbBePoolName": {
-                        "value": "[variables('fwLbBePoolName')]"
+                        "value": "[variables('fwIlbBePoolName')]"
                     },
                     "appInsightsName": {
                         "value": "[variables('appInsightsName')]"
@@ -497,29 +493,9 @@
                         "value": "[parameters('scaleOutThreshold')]"
                     }
                 }
-             }
-           }
-        ],
-    "outputs": {
-        "InboundFwVnetName": {
-            "value": "[parameters('virtualNetworkName')]",
-            "type": "string"
-        },
-        "InboundFwMgmtSubnetName": {
-            "value": "[variables('MgmtSubnetName')]",
-            "type": "string"
-        },
-        "InboundFwUntrustSubnetName": {
-            "value": "[variables('untrustedSubnetName')]",
-            "type": "string"
-        },
-        "InboundFwTrustSubnetName": {
-            "value": "[variables('trustedSubnetName')]",
-            "type": "string"
-        },
-        "InboundFwLoadBalancerIP": {
-            "value": "[parameters('fwLoadBalancerIP')]",
-            "type": "string"
+            }
         }
+    ],
+    "outputs": {
     }
 }
