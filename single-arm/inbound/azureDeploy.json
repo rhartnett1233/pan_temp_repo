@@ -577,7 +577,7 @@
                     },
                     "scaleOutThreshold": {
                         "value": "[parameters('scaleOutThreshold')]"
-                    },
+                    }
                 }
              }
            }
