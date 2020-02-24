@@ -229,7 +229,7 @@
         "publicLBURL" : "[concat(variables('baseUrl'),'/public-lb-', variables('LoadBalancerType'), '.json')]",
         "defaultUdrSetupURL": "[concat(variables('baseUrl'), '/deployDefaultUDR.json')]",
         "defaultEmptyUdrSetupURL": "[concat(variables('baseUrl'), '/deployEmptyUDR.json')]",
-        "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseries.json')]",
+        "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseriesOld.json')]",
         "appInsightsApiVersion": "2018-05-01", 
         "appInsightsComponentsApiVersion": "2018-05-01",
         "networkApiVersion": "2017-06-01",
@@ -557,16 +557,13 @@
                     "subnetNameMgmt": {
                         "value": "[variables('MgmtSubnetName')]"
                     },
-                    "subnetNameUntrust": {
+                    "subnetNameData": {
                         "value": "[variables('untrustedSubnetName')]"
                     },
-                    "subnetNameTrust": {
-                        "value": "[variables('trustedSubnetName')]"
-                    },
-                    "fwLbName": {
+                    "fwIlbName": {
                         "value": "[variables('fwLbName')]"
                     },
-                    "fwLbBePoolName": {
+                    "fwIlbBePoolName": {
                         "value": "[variables('fwLbBePoolName')]"
                     },
                     "appInsightsName": {
@@ -581,9 +578,6 @@
                     "scaleOutThreshold": {
                         "value": "[parameters('scaleOutThreshold')]"
                     },
-                    "vmLicenseHandlerUrl": {
-                        "value": "[parameters('panoramaPluginMessageHandlerUrl')]"
-                    }
                 }
              }
            }
