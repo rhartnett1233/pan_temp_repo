@@ -205,6 +205,7 @@
         "nsgURL" : "[concat(variables('baseUrl'),'/nsg-new.json')]",
         "vnetURL" : "[concat(variables('baseUrl'),'/deployVnet.json')]",
         "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseries.json')]",
+        "customMetricsURL" : "[concat(variables('baseUrl'),'/deployCustomMetrics.json')]",
         "ilbURL" : "[concat(variables('baseUrl'),'/deployInternalLoadBalancer.json')]",
         "elbURL" : "[concat(variables('baseUrl'),'/deployExternalLoadBalancer.json')]",
         "pubIpURL" : "[concat(variables('baseUrl'),'/deployPublicIP.json')]",
@@ -236,6 +237,22 @@
                         "value": "[variables('appInsightsName')]"
                     }
                 }
+            }
+        },
+        {
+            "name": "PublishCustomMetrics",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2016-06-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupAppInsights"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('customMetricsURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters":  {}
             }
         },
         {
@@ -397,8 +414,7 @@
             "dependsOn": [
                 "Microsoft.Resources/deployments/SetupVNET",
                 "Microsoft.Resources/deployments/SetupELB",
-                "Microsoft.Resources/deployments/SetupILB",
-                "Microsoft.Resources/deployments/SetupAppInsights"
+                "Microsoft.Resources/deployments/SetupILB"
             ],
             "properties": {
                 "mode": "Incremental",
