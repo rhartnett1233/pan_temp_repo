@@ -255,22 +255,6 @@
             }
         },
         {
-            "name": "NotifyResourceGroupCompletion",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2016-06-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupVMSeries"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('panoramaPluginMessageHandlerUrl'), '&op=NotifyCompletion', '&subsId=', subscription().subscriptionId, '&rg=', variables('rgname'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters":  {}
-            }
-        },
-        {
             "name": "SetupNSG",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
