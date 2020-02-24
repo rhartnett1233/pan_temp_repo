@@ -105,16 +105,28 @@
         "subnetNameData": {
             "type": "string",
             "metadata": {
-                "description": "Untrust Subnet name"
+                "description": "Data Subnet name"
             }
         },
         "fwIlbName": {
             "type": "string",
             "metadata": {
-                "description": "Application Gateway Name"
+                "description": "FW ILB Name"
             }
         },
         "fwIlbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "Application Gateway Backend Pool Name"
+            }
+        },
+        "fwElbName": {
+            "type": "string",
+            "metadata": {
+                "description": "FW ILB Name"
+            }
+        },
+        "fwElbBePoolName": {
             "type": "string",
             "metadata": {
                 "description": "Application Gateway Backend Pool Name"
@@ -212,9 +224,6 @@
             "name": "[parameters('vmssName')]",
             "location": "[resourceGroup().location]",
             "apiVersion": "2017-12-01",
-            "tags": {
-                "PanoramaManaged": "yes"
-            },
             "sku": {
                 "name": "[parameters('vmSize')]",
                 "tier": "Standard",
@@ -293,6 +302,9 @@
                                         "loadBalancerBackendAddressPools": [
                                             {
                                                 "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/', parameters('fwIlbBePoolName'))]"
+                                            },
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwElbName'), '/backendAddressPools/', parameters('fwElbBePoolName'))]"
                                             }
                                         ]
                                     }
@@ -306,7 +318,7 @@
         {
             "type": "microsoft.insights/autoscalesettings",
             "name": "[variables('autoscaleName')]",
-            "apiVersion": "2014-04-01",
+            "apiVersion": "2015-04-01",
             "location": "[resourceGroup().location]",
             "tags": {
                 "PanoramaManaged": "Yes"
@@ -366,7 +378,8 @@
                         ]
                     }
                 ],
-                "notifications": [],
+                "notifications": [
+                ],
             "enabled": true,
             "targetResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('vmssName'))]"
         }

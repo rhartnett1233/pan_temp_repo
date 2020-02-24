@@ -442,6 +442,12 @@
                     "fwIlbBePoolName": {
                         "value": "[variables('fwIlbBePoolName')]"
                     },
+                    "fwElbName": {
+                        "value": "[variables('fwElbName')]"
+                    },
+                    "fwElbBePoolName": {
+                        "value": "[variables('fwElbBePoolName')]"
+                    },
                     "appInsightsName": {
                         "value": "[variables('appInsightsName')]"
                     },
