@@ -239,22 +239,6 @@
             }
         },
         {
-            "name": "PublishCustomMetrics",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2016-06-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupAppInsights"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('panoramaPluginMessageHandlerUrl'), '&op=PublishCustomMetrics', '&ik=', reference('SetupAppInsights').outputs.instrumentationKey.value, '&subsId=', subscription().subscriptionId, '&rg=', variables('rgname'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters":  {}
-            }
-        },
-        {
             "name": "SetupNSG",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
