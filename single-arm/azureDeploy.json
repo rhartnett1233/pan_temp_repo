@@ -157,6 +157,12 @@
                 "description": "The maximum number of VM-Series firewall(s) to deploy in the VM Scale Set."
             }
         },
+        "appInsightsName": {
+            "type": "string",
+             "metadata": {
+                 "description": "Name of appInsights instance to be used in autoscaling."
+             }
+        },
         "autoScaleMetric": {
              "type": "string",
              "allowedValues": [
@@ -186,12 +192,6 @@
             "metadata": {
                 "description": "The threshold above which the VM-Series firewall is scaled out."
             }
-        },
-        "panoramaPluginMessageHandlerUrl": {
-            "type": "string",
-            "metadata":{
-              "description": "The Azure Function URL that was created when you launched the Service Bus infrastructure template."
-            }
         }
     },
     "variables": {
@@ -210,7 +210,6 @@
         "elbURL" : "[concat(variables('baseUrl'),'/deployExternalLoadBalancer.json')]",
         "pubIpURL" : "[concat(variables('baseUrl'),'/deployPublicIP.json')]",
         "appInsightsApiVersion": "2018-05-01", 
-        "appInsightsName": "[concat(variables('rgname'), '-appinsights-', variables('namingInfix'))]",
         "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
         "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
         "fwElbName": "[concat(variables('rgname'), '_fw_elb_', variables('namingInfix'))]",
@@ -222,39 +221,6 @@
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
     "resources": [
-        {
-            "name": "SetupAppInsights",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('appInsightsApiVersion')]",
-            "properties": { 
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('appInsightsUrl')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appInsightsName": {
-                        "value": "[variables('appInsightsName')]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "PublishCustomMetrics",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2016-06-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupAppInsights"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('panoramaPluginMessageHandlerUrl'), '&op=PublishCustomMetrics', '&ik=', reference('SetupAppInsights').outputs.instrumentationKey.value, '&subsId=', subscription().subscriptionId, '&rg=', variables('rgname'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters":  {}
-            }
-        },
         {
             "name": "SetupNSG",
             "type": "Microsoft.Resources/deployments",
@@ -472,7 +438,7 @@
                         "value": "[variables('fwElbBePoolName')]"
                     },
                     "appInsightsName": {
-                        "value": "[variables('appInsightsName')]"
+                        "value": "[parameters('appInsightsName')]"
                     },
                     "autoScaleMetric": {
                         "value": "[parameters('autoScaleMetric')]"
