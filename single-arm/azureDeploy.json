@@ -192,6 +192,13 @@
             "metadata": {
                 "description": "The threshold above which the VM-Series firewall is scaled out."
             }
+        },
+        "gitRepoUrl": {
+            "type": "string",
+            "defaultValue" : "https://raw.githubusercontent.com/rhartnett1233/pan_temp_repo/master/single-arm",
+            "metadata": {
+                "description": "URL for github repo for nested template."
+            }
         }
     },
     "variables": {
@@ -201,16 +208,15 @@
         "networkSecurityGroupName" : "[concat(variables('rgname'), '-mgmt-nsg-', variables('namingInfix'))]",
         "MgmtSubnetName" : "[concat(parameters('virtualNetworkName'), '-mgmt-subnet')]",
         "dataSubnetName" : "[concat(parameters('virtualNetworkName'), '-data-subnet')]",
-        "baseUrl" : "https://raw.githubusercontent.com/rhartnett1233/pan_temp_repo/master/single-arm",
-        "nsgURL" : "[concat(variables('baseUrl'),'/nsg-new.json')]",
-        "vnetURL" : "[concat(variables('baseUrl'),'/deployVnet.json')]",
-        "vmseriesURL" : "[concat(variables('baseUrl'),'/vmseries.json')]",
-        "customMetricsURL" : "[concat(variables('baseUrl'),'/deployCustomMetrics.json')]",
-        "ilbURL" : "[concat(variables('baseUrl'),'/deployInternalLoadBalancer.json')]",
-        "elbURL" : "[concat(variables('baseUrl'),'/deployExternalLoadBalancer.json')]",
-        "pubIpURL" : "[concat(variables('baseUrl'),'/deployPublicIP.json')]",
+        "nsgURL" : "[concat(parameters('gitRepoUrl'),'/nsg-new.json')]",
+        "vnetURL" : "[concat(parameters('gitRepoUrl'),'/deployVnet.json')]",
+        "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
+        "customMetricsURL" : "[concat(parameters('gitRepoUrl'),'/deployCustomMetrics.json')]",
+        "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
+        "elbURL" : "[concat(parameters('gitRepoUrl'),'/deployExternalLoadBalancer.json')]",
+        "pubIpURL" : "[concat(parameters('gitRepoUrl'),'/deployPublicIP.json')]",
         "appInsightsApiVersion": "2018-05-01", 
-        "appInsightsUrl": "[concat(variables('baseUrl'),'/deployAppInsights.json')]",
+        "appInsightsUrl": "[concat(parameters('gitRepoUrl'),'/deployAppInsights.json')]",
         "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
         "fwElbName": "[concat(variables('rgname'), '_fw_elb_', variables('namingInfix'))]",
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', variables('namingInfix'))]",
