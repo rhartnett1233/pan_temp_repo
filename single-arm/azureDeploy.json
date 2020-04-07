@@ -43,13 +43,6 @@
                 "description": "CIDR for Data Subnet."
             }
         },
-        "FWILBSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "192.168.3.0/24",
-            "metadata": {
-                "description": "CIDR for the FW ILB Subnet."
-            }
-        },
         "elbDnsNamePrefix" : {
             "type": "string",
             "defaultValue": "fwelbdnsname",
@@ -195,7 +188,6 @@
         },
         "gitRepoUrl": {
             "type": "string",
-            "defaultValue" : "https://raw.githubusercontent.com/rhartnett1233/pan_temp_repo/master/single-arm",
             "metadata": {
                 "description": "URL for github repo for nested template."
             }
