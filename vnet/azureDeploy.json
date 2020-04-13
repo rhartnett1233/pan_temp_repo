@@ -39,7 +39,7 @@
         "namingInfix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
         "rgname" : "[resourceGroup().name]",
         "nsgURL" : "[concat(parameters('gitRepoUrl'),'/nsg-new.json')]",
-        "vnetURL" : "[concat(parameters('gitRepoUrl'),'/deployVnet.json')]",
+        "vnetURL" : "[concat(parameters('gitRepoUrl'),'/deployVnet.json')]"
     },
     "resources": [
         {
