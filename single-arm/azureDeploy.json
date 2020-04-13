@@ -260,7 +260,7 @@
                     },
                     "dataSubnetPrefix": {
                          "value": "[parameters('dataSubnetPrefix')]"
-                    },
+                    }
                 }
             }
         },
