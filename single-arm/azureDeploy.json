@@ -248,7 +248,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupVNET"
+                "Microsoft.Resources/deployments/SetupSubnets"
             ],
             "properties": { 
                 "mode": "Incremental",
@@ -280,7 +280,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupVNET"
+                "Microsoft.Resources/deployments/SetupSubnets"
             ],
             "properties": { 
                 "mode": "Incremental",
@@ -306,7 +306,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupVNET",
+                "Microsoft.Resources/deployments/SetupSubnets",
                 "Microsoft.Resources/deployments/SetupPubIP"
             ],
             "properties": { 
@@ -336,7 +336,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupVNET",
+                "Microsoft.Resources/deployments/SetupSubnets",
                 "Microsoft.Resources/deployments/SetupELB",
                 "Microsoft.Resources/deployments/SetupILB"
             ],
