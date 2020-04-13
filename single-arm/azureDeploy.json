@@ -190,7 +190,6 @@
         "location" : "[resourceGroup().location]",
         "namingInfix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
         "rgname" : "[resourceGroup().name]",
-        "networkSecurityGroupName" : "[concat(variables('rgname'), '-mgmt-nsg-', variables('namingInfix'))]",
         "MgmtSubnetName" : "[concat(parameters('virtualNetworkName'), '-mgmt-subnet')]",
         "dataSubnetName" : "[concat(parameters('virtualNetworkName'), '-data-subnet')]",
         "mgmtSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployMgmtSubnet.json')]",
@@ -233,7 +232,7 @@
                          "value": "[parameters('mgmtSubnetPrefix')]"
                     },
                     "networkSecurityGroupName": {
-                        "value": "[variables('networkSecurityGroupName')]"
+                        "value": "[parameters('networkSecurityGroupName')]"
                     }
                 }
             }
