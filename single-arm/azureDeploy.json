@@ -193,7 +193,8 @@
         "networkSecurityGroupName" : "[concat(variables('rgname'), '-mgmt-nsg-', variables('namingInfix'))]",
         "MgmtSubnetName" : "[concat(parameters('virtualNetworkName'), '-mgmt-subnet')]",
         "dataSubnetName" : "[concat(parameters('virtualNetworkName'), '-data-subnet')]",
-        "subnetURL" : "[concat(parameters('gitRepoUrl'),'/deploySubnets.json')]",
+        "mgmtSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployMgmtSubnet.json')]",
+        "dataSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployDataSubnet.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
         "customMetricsURL" : "[concat(parameters('gitRepoUrl'),'/deployCustomMetrics.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
@@ -212,13 +213,13 @@
     },
     "resources": [
         {
-            "name": "SetupSubnets",
+            "name": "SetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('subnetURL')]",
+                    "uri": "[variables('mgmtSubnetURL')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -228,14 +229,8 @@
                     "mgmtSubnetName": {
                          "value": "[variables('MgmtSubnetName')]"
                     },
-                    "dataSubnetName": {
-                         "value": "[variables('dataSubnetName')]"
-                    },
                     "mgmtSubnetPrefix": {
                          "value": "[parameters('mgmtSubnetPrefix')]"
-                    },
-                    "dataSubnetPrefix": {
-                         "value": "[parameters('dataSubnetPrefix')]"
                     },
                     "networkSecurityGroupName": {
                         "value": "[variables('networkSecurityGroupName')]"
@@ -244,11 +239,38 @@
             }
         },
         {
+            "name": "SetupDataSubnet",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupMgmtSubnet"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('dataSubnetURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "dataSubnetName": {
+                         "value": "[variables('dataSubnetName')]"
+                    },
+                    "dataSubnetPrefix": {
+                         "value": "[parameters('dataSubnetPrefix')]"
+                    },
+                }
+            }
+        },
+        {
             "name": "SetupILB",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupSubnets"
+                "Microsoft.Resources/deployments/SetupMgmtSubnet",
+                "Microsoft.Resources/deployments/SetupDataSubnet"
             ],
             "properties": { 
                 "mode": "Incremental",
@@ -280,7 +302,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupSubnets"
+                "Microsoft.Resources/deployments/SetupMgmtSubnet",
+                "Microsoft.Resources/deployments/SetupDataSubnet"
             ],
             "properties": { 
                 "mode": "Incremental",
@@ -306,7 +329,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupSubnets",
+                "Microsoft.Resources/deployments/SetupMgmtSubnet",
+                "Microsoft.Resources/deployments/SetupDataSubnet",
                 "Microsoft.Resources/deployments/SetupPubIP"
             ],
             "properties": { 
@@ -336,7 +360,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupSubnets",
+                "Microsoft.Resources/deployments/SetupMgmtSubnet",
+                "Microsoft.Resources/deployments/SetupDataSubnet",
                 "Microsoft.Resources/deployments/SetupELB",
                 "Microsoft.Resources/deployments/SetupILB"
             ],

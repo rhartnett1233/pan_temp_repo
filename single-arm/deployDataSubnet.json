@@ -9,25 +9,11 @@
                 "description": "Virtual Network Name of the VM-Series firewall VM Scale Set."
             }
         },
-        "mgmtSubnetName": {
-            "type": "string",
-            "defaultValue": "Mgmt-Subnet",
-            "metadata": {
-                "description": "Subnet for Management"
-            }
-        },
         "dataSubnetName": {
             "type": "string",
             "defaultValue": "Data-Subnet",
             "metadata": {
                 "description": "Subnet for Data"
-            }
-        },
-        "mgmtSubnetPrefix": {
-            "type": "string",
-            "defaultValue": "None",
-            "metadata": {
-                "description": "Mgmt subnet CIDR"
             }
         },
         "dataSubnetPrefix": {
@@ -36,25 +22,11 @@
             "metadata": {
                 "description": "Data subnet CIDR"
             }
-        },
-        "networkSecurityGroupName": {
-            "type": "string"
         }
     },
     "variables": {
     },
     "resources": [
-        {
-            "name": "[concat(parameters('virtualNetworkName'), '/', parameters('mgmtSubnetName'))]",
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2015-06-15",
-            "properties": {
-                "addressPrefix": "[parameters('mgmtSubnetPrefix')]",
-                "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
-                }
-            }
-        },
         {
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('dataSubnetName'))]",
             "type": "Microsoft.Network/virtualNetworks/subnets",
