@@ -46,6 +46,8 @@
     "resources": [
         {
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('mgmtSubnetName'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2015-06-15",
             "properties": {
                 "addressPrefix": "[parameters('mgmtSubnetPrefix')]",
                 "networkSecurityGroup": {
@@ -54,7 +56,9 @@
             }
         },
         {
-            "name": "[parameters('dataSubnetName')]",
+            "name": "[concat(parameters('virtualNetworkName'), '/', parameters('dataSubnetName'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2015-06-15",
             "properties": {
                 "addressPrefix": "[parameters('dataSubnetPrefix')]"
             }
