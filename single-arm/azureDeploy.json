@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
 
     "parameters": {
-        "networkSecurityGroupInboundSrcIP": {
+        "networkSecurityGroupName": {
             "type": "string",
              "metadata": {
                  "description": "The IP address that you want to use to access the management interface on the firewall(s). This IP address will be added to the inbound NSG on eth0(MGMT) to restrict access."
@@ -20,13 +20,6 @@
             "defaultValue": "inbound-fw-vnet",
             "metadata": {
                 "description": "Virtual Network Name of the VM-Series firewall VM Scale Set."
-            }
-        },
-        "virtualNetworkAddressPrefix": {
-            "type": "string",
-            "defaultValue": "192.168.0.0/21",
-            "metadata": {
-                "description": "CIDR for Virtual Network."
             }
         },
         "mgmtSubnetPrefix": {
@@ -200,8 +193,7 @@
         "networkSecurityGroupName" : "[concat(variables('rgname'), '-mgmt-nsg-', variables('namingInfix'))]",
         "MgmtSubnetName" : "[concat(parameters('virtualNetworkName'), '-mgmt-subnet')]",
         "dataSubnetName" : "[concat(parameters('virtualNetworkName'), '-data-subnet')]",
-        "nsgURL" : "[concat(parameters('gitRepoUrl'),'/nsg-new.json')]",
-        "vnetURL" : "[concat(parameters('gitRepoUrl'),'/deployVnet.json')]",
+        "subnetURL" : "[concat(parameters('gitRepoUrl'),'/deploySubnets.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
         "customMetricsURL" : "[concat(parameters('gitRepoUrl'),'/deployCustomMetrics.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
@@ -220,65 +212,33 @@
     },
     "resources": [
         {
-            "name": "SetupNSG",
+            "name": "SetupSubnets",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
-            "properties": { 
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('nsgURL')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "location": {
-                        "value": "[variables('location')]"
-                    },
-                    "nsgName": {
-                        "value": "[variables('networkSecurityGroupName')]"
-                    },
-                    "srcIPInboundNSG": {
-                        "value": "[parameters('networkSecurityGroupInboundSrcIP')]"
-                    },
-                    "virtualNetworkAddressPrefix": {
-                        "value": "[parameters('virtualNetworkAddressPrefix')]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "SetupVNET",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupNSG"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('vnetURL')]",
+                    "uri": "[variables('subnetURL')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "nsgName": {
-                        "value": "[variables('networkSecurityGroupName')]"
-                    },
                     "virtualNetworkName": {
                         "value": "[parameters('virtualNetworkName')]"
                     },
-                    "virtualNetworkAddressPrefix": {
-                        "value": "[parameters('virtualNetworkAddressPrefix')]"
-                    },
-                    "subnet0Name": {
+                    "mgmtSubnetName": {
                          "value": "[variables('MgmtSubnetName')]"
                     },
-                    "subnet1Name": {
+                    "dataSubnetName": {
                          "value": "[variables('dataSubnetName')]"
                     },
-                    "subnet0Prefix": {
+                    "mgmtSubnetPrefix": {
                          "value": "[parameters('mgmtSubnetPrefix')]"
                     },
-                    "subnet1Prefix": {
+                    "dataSubnetPrefix": {
                          "value": "[parameters('dataSubnetPrefix')]"
+                    },
+                    "networkSecurityGroupName": {
+                        "value": "[variables('networkSecurityGroupName')]"
                     }
                 }
             }
