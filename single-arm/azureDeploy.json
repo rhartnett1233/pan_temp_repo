@@ -309,7 +309,7 @@
                         "value": "[parameters('virtualNetworkName')]"
                     },
                     "subnetName": {
-                        "value": "[variables('dataSubnetName')]"
+                        "value": "[parameters('dataSubnetName')]"
                     },
                     "loadBalancerName": {
                         "value": "[parameters('fwIlbName')]"
