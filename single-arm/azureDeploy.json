@@ -22,13 +22,25 @@
                 "description": "Virtual Network Name of the VM-Series firewall VM Scale Set."
             }
         },
+        "mgmtSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
+            }
+        },
         "mgmtSubnetPrefix": {
             "type": "string",
             "defaultValue": "192.168.0.0/24",
-                    "metadata": {
-                        "description": "CIDR for Management Subnet."
-                    }
-            },
+            "metadata": {
+                "description": "CIDR for Management Subnet."
+            }
+        },
+        "dataSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
+            }
+        },
         "dataSubnetPrefix": {
             "type": "string",
             "defaultValue": "192.168.1.0/24",
@@ -36,11 +48,35 @@
                 "description": "CIDR for Data Subnet."
             }
         },
+        "fwIlbName": {
+            "type": "string",
+            "metadata": {
+                "description": "FW ILB Name of the VM-Series firewall VM Scale Set."
+            }
+        },
+        "fwElbName": {
+            "type": "string",
+            "metadata": {
+                "description": "FW ELB Name of the VM-Series firewall VM Scale Set."
+            }
+        },
+        "elbIPAddressName": {
+            "type": "string",
+            "metadata": {
+                "description": "FW ELB IP Name of the VM-Series firewall VM Scale Set."
+            }
+        },
         "elbDnsNamePrefix" : {
             "type": "string",
             "defaultValue": "fwelbdnsname",
             "metadata": {
                 "description": "DNS name for external FW load balancer."
+            }
+        },
+        "vmssName": {
+            "type": "string",
+            "metadata": {
+                "description": "VM-Series firewall VM Scale Set Name."
             }
         },
         "vmSeriesFirewallModel": {
@@ -190,24 +226,15 @@
         "location" : "[resourceGroup().location]",
         "namingInfix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
         "rgname" : "[resourceGroup().name]",
-        "MgmtSubnetName" : "[concat(parameters('virtualNetworkName'), '-mgmt-subnet')]",
-        "dataSubnetName" : "[concat(parameters('virtualNetworkName'), '-data-subnet')]",
         "mgmtSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployMgmtSubnet.json')]",
         "dataSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployDataSubnet.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
-        "customMetricsURL" : "[concat(parameters('gitRepoUrl'),'/deployCustomMetrics.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "elbURL" : "[concat(parameters('gitRepoUrl'),'/deployExternalLoadBalancer.json')]",
         "pubIpURL" : "[concat(parameters('gitRepoUrl'),'/deployPublicIP.json')]",
-        "appInsightsApiVersion": "2018-05-01", 
-        "appInsightsUrl": "[concat(parameters('gitRepoUrl'),'/deployAppInsights.json')]",
-        "fwIlbName": "[concat(variables('rgname'), '_fw_ilb_', variables('namingInfix'))]",
-        "fwElbName": "[concat(variables('rgname'), '_fw_elb_', variables('namingInfix'))]",
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', variables('namingInfix'))]",
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', variables('namingInfix'))]",
-        "elbIPAddressName": "[concat(variables('rgname'), '_fw_elb_ip_', variables('namingInfix'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
-        "vmssName": "[concat('pavmfw', variables('namingInfix'))]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
     "resources": [
@@ -226,7 +253,7 @@
                         "value": "[parameters('virtualNetworkName')]"
                     },
                     "mgmtSubnetName": {
-                         "value": "[variables('MgmtSubnetName')]"
+                         "value": "[parameters('mgmtSubnetName')]"
                     },
                     "mgmtSubnetPrefix": {
                          "value": "[parameters('mgmtSubnetPrefix')]"
@@ -255,7 +282,7 @@
                         "value": "[parameters('virtualNetworkName')]"
                     },
                     "dataSubnetName": {
-                         "value": "[variables('dataSubnetName')]"
+                         "value": "[parameters('dataSubnetName')]"
                     },
                     "dataSubnetPrefix": {
                          "value": "[parameters('dataSubnetPrefix')]"
@@ -285,7 +312,7 @@
                         "value": "[variables('dataSubnetName')]"
                     },
                     "loadBalancerName": {
-                        "value": "[variables('fwIlbName')]"
+                        "value": "[parameters('fwIlbName')]"
                     },
                     "loadBalancerIP": {
                         "value": "[parameters('fwLoadBalancerIP')]"
@@ -312,7 +339,7 @@
                 },
                 "parameters": {
                     "elbIPAddressName": {
-                        "value": "[variables('elbIPAddressName')]"
+                        "value": "[parameters('elbIPAddressName')]"
                     },
                     "elbDnsName": {
                         "value": "[parameters('elbDnsNamePrefix')]"
@@ -343,10 +370,10 @@
                         "value": "[parameters('virtualNetworkName')]"
                     },
                     "loadBalancerName": {
-                        "value": "[variables('fwElbName')]"
+                        "value": "[parameters('fwElbName')]"
                     },
                     "frontendIp": {
-                        "value": "[variables('elbIPAddressName')]"
+                        "value": "[parameters('elbIPAddressName')]"
                     },
                     "fwELbBePoolName": {
                         "value": "[variables('fwElbBePoolName')]"
@@ -372,7 +399,7 @@
                 },
                 "parameters": {
                     "vmssName": {
-                        "value": "[variables('vmssName')]"
+                        "value": "[parameters('vmssName')]"
                     },
                     "vmSize": {
                          "value": "[parameters('vmSeriesFirewallVmSize')]"
@@ -402,19 +429,19 @@
                          "value": "[parameters('virtualNetworkName')]"
                     },
                     "subnetNameMgmt": {
-                        "value": "[variables('MgmtSubnetName')]"
+                        "value": "[parameters('mgmtSubnetName')]"
                     },
                     "subnetNameData": {
-                        "value": "[variables('dataSubnetName')]"
+                        "value": "[parameters('dataSubnetName')]"
                     },
                     "fwIlbName": {
-                        "value": "[variables('fwIlbName')]"
+                        "value": "[parameters('fwIlbName')]"
                     },
                     "fwIlbBePoolName": {
                         "value": "[variables('fwIlbBePoolName')]"
                     },
                     "fwElbName": {
-                        "value": "[variables('fwElbName')]"
+                        "value": "[parameters('fwElbName')]"
                     },
                     "fwElbBePoolName": {
                         "value": "[variables('fwElbBePoolName')]"
