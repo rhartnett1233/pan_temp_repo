@@ -13,6 +13,17 @@
             "type": "string",
             "defaultValue": "nsg-default1"
         },
+        "deployIntoExistingVnet": {
+             "type": "string",
+             "defaultValue": "No",
+             "allowedValues": [
+                    "Yes",
+                    "No"
+             ],
+             "metadata": {
+                 "description": "If yes, then the template will deploy just the VM-Series firewall and not the app-gw."
+             }
+        },
         "virtualNetworkName": {
             "type": "string",
             "defaultValue": "inbound-fw-vnet",
@@ -69,6 +80,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupVNET",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
