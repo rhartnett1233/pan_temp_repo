@@ -230,7 +230,6 @@
     },
     "variables": {
         "location" : "[resourceGroup().location]",
-        "namingInfix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
         "rgname" : "[resourceGroup().name]",
         "mgmtSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployMgmtSubnet.json')]",
         "dataSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployDataSubnet.json')]",
@@ -238,8 +237,8 @@
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "elbURL" : "[concat(parameters('gitRepoUrl'),'/deployExternalLoadBalancer.json')]",
         "pubIpURL" : "[concat(parameters('gitRepoUrl'),'/deployPublicIP.json')]",
-        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', variables('namingInfix'))]",
-        "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', variables('namingInfix'))]",
+        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
+        "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', parameters('randomString'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
