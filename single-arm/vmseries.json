@@ -175,7 +175,7 @@
     },
     "variables": {
         "rgname": "[resourceGroup().id]",
-        "namingInfix": "[substring(uniqueString(parameters('guidValue')), 0, 5)]",
+        "namingInfix": "5lo3i",
         "autoscaleName": "[concat('autoscale', variables('namingInfix'))]",
         "nicNameMgmt": "[concat('nicmgmt', variables('namingInfix'))]",
         "nicNameDataIntfc": "[concat('nicdata', variables('namingInfix'))]",
