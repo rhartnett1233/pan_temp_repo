@@ -171,16 +171,21 @@
         "guidValue": {
             "type": "string",
             "defaultValue": "[newGuid()]"
+        },
+        "randomString": {
+            "type": "string",
+            "metadata": {
+                "description": "random string for resource naming."
+            }
         }
     },
     "variables": {
         "rgname": "[resourceGroup().id]",
-        "namingInfix": "5lo3i",
-        "autoscaleName": "[concat('autoscale', variables('namingInfix'))]",
-        "nicNameMgmt": "[concat('nicmgmt', variables('namingInfix'))]",
-        "nicNameDataIntfc": "[concat('nicdata', variables('namingInfix'))]",
-        "ipConfigNameData": "[concat('ipconfigdata', variables('namingInfix'))]",
-        "ipConfigNamemgmt": "[concat('ipconfigmgmt', variables('namingInfix'))]",
+        "autoscaleName": "[concat('autoscale', parameters('randomString'))]",
+        "nicNameMgmt": "[concat('nicmgmt', parameters('randomString'))]",
+        "nicNameDataIntfc": "[concat('nicdata', parameters('randomString'))]",
+        "ipConfigNameData": "[concat('ipconfigdata', parameters('randomString'))]",
+        "ipConfigNamemgmt": "[concat('ipconfigmgmt', parameters('randomString'))]",
         "imagePublisher": "paloaltonetworks",
         "imageOffer" : "vmseries1",
         "version" : "latest",
@@ -262,7 +267,7 @@
                         }
                     },
                     "osProfile": {
-                        "computerNamePrefix": "[concat('pavm', variables('namingInfix'))]",
+                        "computerNamePrefix": "[concat('pavm', variables('randomString'))]",
                         "adminUsername": "[parameters('adminUsername')]",
                         "adminPassword": "[parameters('adminPassword')]",
                         "customData": "[base64(parameters('customDataField'))]"

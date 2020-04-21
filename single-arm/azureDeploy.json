@@ -215,6 +215,12 @@
                 "description": "The threshold above which the VM-Series firewall is scaled out."
             }
         },
+        "randomString": {
+            "type": "string",
+            "metadata": {
+                "description": "random string for resource naming."
+            }
+        },
         "gitRepoUrl": {
             "type": "string",
             "metadata": {
@@ -457,6 +463,9 @@
                     },
                     "scaleOutThreshold": {
                         "value": "[parameters('scaleOutThreshold')]"
+                    },
+                    "randomString" : {
+                        "value" : "[parameters('randomString')]"
                     }
                 }
             }
