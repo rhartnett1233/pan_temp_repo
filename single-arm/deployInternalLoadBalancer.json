@@ -19,12 +19,29 @@
 				"description": "Name of the Virtual Network (VNET)"
 			}
 		},
+        "deployIntoExistingVnet": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                    "Yes",
+                    "No"
+            ],
+            "metadata": {
+                "description": "If yes, then the template will deploy just the VM-Series firewall and subnets."
+            }
+        },
 		"subnetName": {
 			"type": "string",
 			"metadata": {
 				"description": "Name of the subnet"
 			}
 		},
+        "subnetID": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the subnet"
+            }
+        },
 		"loadBalancerName": {
 			"type": "string",
 			"metadata": {
@@ -47,8 +64,7 @@
 
 	"variables": {
 		"vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
-		"lbId": "[resourceId('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))]",
-        "location": "[resourceGroup().location]",
+        "location": "[resourceGroup().location]"
 	},
 
 	"resources": [
@@ -72,7 +88,7 @@
                             "privateIPAddress": "[parameters('loadBalancerIP')]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                                "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), [resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))], parameters(subnetID)]"
                             }
                         }
                     }

@@ -39,6 +39,12 @@
                 "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
             }
         },
+        "mgmtSubnetID": {
+            "type": "string",
+            "metadata": {
+                "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
+            }
+        },
         "mgmtSubnetPrefix": {
             "type": "string",
             "defaultValue": "192.168.0.0/24",
@@ -47,6 +53,12 @@
             }
         },
         "dataSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
+            }
+        },
+        "dataSubnetID": {
             "type": "string",
             "metadata": {
                 "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
@@ -326,8 +338,14 @@
                     "virtualNetworkName": {
                         "value": "[parameters('virtualNetworkName')]"
                     },
+                    "deployIntoExistingVnet": {
+                        "value": "[parameters('deployIntoExistingVnet')]"
+                    },
                     "subnetName": {
                         "value": "[parameters('dataSubnetName')]"
+                    },
+                    "subnetID": {
+                        "value": "[parameters('dataSubnetID')]"
                     },
                     "loadBalancerName": {
                         "value": "[parameters('fwIlbName')]"
@@ -384,9 +402,6 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "virtualNetworkName": {
-                        "value": "[parameters('virtualNetworkName')]"
-                    },
                     "loadBalancerName": {
                         "value": "[parameters('fwElbName')]"
                     },

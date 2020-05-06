@@ -13,12 +13,6 @@
 			},
 			"defaultValue": "Standard"
 		},
-		"virtualNetworkName": {
-			"type": "string",
-			"metadata": {
-				"description": "Name of the Virtual Network (VNET)"
-			}
-		},
 		"loadBalancerName": {
 			"type": "string",
 			"metadata": {
@@ -40,11 +34,8 @@
 	},
 
 	"variables": {
-		"vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
-		"lbId": "[resourceId('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))]",
 		"frontendIpId": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('frontendIp'))]",
-		"location": "[resourceGroup().location]",
-		"rgname": "[resourceGroup().id]",
+		"location": "[resourceGroup().location]"
 	},
 
 	"resources": [
