@@ -88,7 +88,7 @@
                             "privateIPAddress": "[parameters('loadBalancerIP')]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), [resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))], parameters(subnetID)]"
+                                "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), [resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))], parameters(subnetID))]"
                             }
                         }
                     }
