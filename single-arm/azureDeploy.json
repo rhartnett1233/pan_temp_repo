@@ -22,6 +22,17 @@
                 "description": "Virtual Network Name of the VM-Series firewall VM Scale Set."
             }
         },
+        "deployIntoExistingVnet": {
+             "type": "string",
+             "defaultValue": "No",
+             "allowedValues": [
+                    "Yes",
+                    "No"
+             ],
+             "metadata": {
+                 "description": "If yes, then the template will deploy just the VM-Series firewall and subnets."
+             }
+        },
         "mgmtSubnetName": {
             "type": "string",
             "metadata": {
@@ -244,6 +255,7 @@
     },
     "resources": [
         {
+            "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
@@ -270,6 +282,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupDataSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
