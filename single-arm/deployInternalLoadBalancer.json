@@ -64,8 +64,7 @@
 
 	"variables": {
 		"vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
-        "location": "[resourceGroup().location]",
-        "subnetID" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), [resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))], parameters(subnetID))]"
+        "location": "[resourceGroup().location]"
 	},
 
 	"resources": [
@@ -89,7 +88,7 @@
                             "privateIPAddress": "[parameters('loadBalancerIP')]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
-                                "id" : "variables(subnetID)"
+                                "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName')), parameters(subnetID))]"
                             }
                         }
                     }
