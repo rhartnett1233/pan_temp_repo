@@ -461,11 +461,20 @@
                     "virtualNetworkName": {
                          "value": "[parameters('virtualNetworkName')]"
                     },
+                    "deployIntoExistingVnet": {
+                        "value": "[parameters('deployIntoExistingVnet')]"
+                    },
                     "subnetNameMgmt": {
                         "value": "[parameters('mgmtSubnetName')]"
                     },
+                    "subnetIDMgmt": {
+                        "value": "[parameters('mgmtSubnetID')]"
+                    },
                     "subnetNameData": {
                         "value": "[parameters('dataSubnetName')]"
+                    },
+                    "subnetIDData": {
+                        "value": "[parameters('dataSubnetID')]"
                     },
                     "fwIlbName": {
                         "value": "[parameters('fwIlbName')]"
