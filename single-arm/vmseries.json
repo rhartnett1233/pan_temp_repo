@@ -96,13 +96,36 @@
                 "description": "VNET name"
             }
         },
+        "deployIntoExistingVnet": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                    "Yes",
+                    "No"
+            ],
+            "metadata": {
+                "description": "If yes, then the template will deploy just the VM-Series firewall and subnets."
+            }
+        },
         "subnetNameMgmt": {
             "type": "string",
             "metadata": {
                 "description": "Management Subnet name"
             }
         },
+        "subnetIDMgmt": {
+            "type": "string",
+            "metadata": {
+                "description": "Management Subnet name"
+            }
+        },
         "subnetNameData": {
+            "type": "string",
+            "metadata": {
+                "description": "Untrust Subnet name"
+            }
+        },
+        "subnetIDData": {
             "type": "string",
             "metadata": {
                 "description": "Untrust Subnet name"
@@ -190,6 +213,8 @@
         "imageOffer" : "vmseries1",
         "version" : "latest",
         "location": "[resourceGroup().location]",
+        "tempMgmtSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameMgmt'))]",
+        "tempDataSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameData'))]",
         "resourceGroupName": "[resourceGroup().name]",
         "scaleMetricMap": {
             "Data Plane CPU Utilization %": {
@@ -283,7 +308,7 @@
                                     "name": "[variables('ipConfigNamemgmt')]",
                                     "properties": {
                                         "subnet": {
-                                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'), '/subnets/', parameters('subnetNameMgmt'))]"
+                                            "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempMgmtSubnetID'), parameters('subnetIDMgmt'))]"
                                         },
                                         "publicIPAddressConfiguration": {
                                             "name": "pavm_pip",
@@ -305,7 +330,7 @@
                                     "name": "[variables('ipConfigNameData')]",
                                     "properties": {
                                         "subnet": {
-                                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'), '/subnets/', parameters('subnetNameData'))]"
+                                            "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempDataSubnetID'), parameters('subnetIDData'))]"
                                         },
                                         "loadBalancerBackendAddressPools": [
                                             {
