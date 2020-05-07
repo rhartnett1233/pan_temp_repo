@@ -55,13 +55,13 @@
         },
         "dataSubnetName": {
             "type": "string",
-            "defaultValue": "none",
             "metadata": {
                 "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
             }
         },
         "dataSubnetID": {
             "type": "string",
+            "defaultValue": "none",
             "metadata": {
                 "description": "Mgmt Subnet Name of the VM-Series firewall VM Scale Set."
             }
