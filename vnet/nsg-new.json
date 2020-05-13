@@ -9,7 +9,8 @@
         "type": "string"
       },
       "srcIPInboundNSG": {
-        "type": "string"
+        "type": "array",
+        "defaultValue": []
       },
       "virtualNetworkAddressPrefix": {
         "type": "string"
@@ -33,7 +34,7 @@
                     "protocol": "*",
                     "sourcePortRange": "*",
                     "destinationPortRange": "*",
-                    "sourceAddressPrefix": "[parameters('srcIPInboundNSG')]",
+                    "sourceAddressPrefixes": "[parameters('srcIPInboundNSG')]",
                     "destinationAddressPrefix": "*",
                     "access": "Allow",
                     "priority": 100,
