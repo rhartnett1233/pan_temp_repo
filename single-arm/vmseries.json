@@ -377,7 +377,7 @@
                                     "metricResourceUri": "[variables('scaleMetricMap')[parameters('autoScaleMetric')].metricResourceUri]",
                                     "timeGrain": "PT1M",
                                     "statistic": "Average",
-                                    "timeWindow": "PT10M",
+                                    "timeWindow": "PT5M",
                                     "timeAggregation": "Average",
                                     "operator": "GreaterThan",
                                     "threshold": "[parameters('scaleOutThreshold')]"
