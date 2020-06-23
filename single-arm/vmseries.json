@@ -309,12 +309,6 @@
                                     "properties": {
                                         "subnet": {
                                             "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempMgmtSubnetID'), parameters('subnetIDMgmt'))]"
-                                        },
-                                        "publicIPAddressConfiguration": {
-                                            "name": "pavm_pip",
-                                            "properties": {
-                                                "idleTimeoutInMinutes": 15
-                                            }
                                         }
                                     }
                                 }]
