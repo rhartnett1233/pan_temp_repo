@@ -25,9 +25,6 @@
         },
         "networkSecurityGroupName": {
             "type": "string"
-        },
-        "natGatewayName": {
-            "type": "string"
         }
     },
     "variables": {
@@ -36,12 +33,9 @@
         {
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('mgmtSubnetName'))]",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2019-11-01",
+            "apiVersion": "2015-06-15",
             "properties": {
                 "addressPrefix": "[parameters('mgmtSubnetPrefix')]",
-                "natGateway": {
-                    "id": "[resourceId('Microsoft.Network/natGateways', parameters('natGatewayName'))]"
-                },
                 "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }

@@ -2,14 +2,14 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "natGatewayName": {
+        "natgatewayname": {
             "defaultValue": "PanNATgateway",
             "type": "String",
             "metadata": {
               "description": "Name of the NAT gateway"
             }
         },
-       "publicIpPrefixName": {
+       "publicipprefixname": {
             "defaultValue": "myPublicIPPrefix",
             "type": "String",
             "metadata": {
@@ -29,7 +29,7 @@
        {
             "type": "Microsoft.Network/publicIPPrefixes",
             "apiVersion": "2019-11-01",
-            "name": "[parameters('publicIpPrefixName')]",
+            "name": "[parameters('publicipprefixname')]",
             "location": "[parameters('location')]",
             "sku": {
                 "name": "Standard"
@@ -42,10 +42,10 @@
         {
             "type": "Microsoft.Network/natGateways",
             "apiVersion": "2019-11-01",
-            "name": "[parameters('natGatewayName')]",
+            "name": "[parameters('natgatewayname')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('publicIpPrefixName'))]"
+                "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('publicipprefixname'))]"
             ],
             "sku": {
                 "name": "Standard"
@@ -54,7 +54,7 @@
                 "idleTimeoutInMinutes": 4,
                 "publicIpPrefixes": [
                     {
-                        "id": "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('publicIpPrefixName'))]"
+                        "id": "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('publicipprefixname'))]"
                     }
                 ]
             }
@@ -62,11 +62,11 @@
     ],
     "outputs": {
         "NatGatewayIPPrefix": {
-			"value": "[reference(concat('Microsoft.Network/publicIPPrefixes/', parameters('publicIpPrefixName'))).ipPrefix]",
+			"value": "[reference(concat('Microsoft.Network/publicIPPrefixes/', parameters('publicipprefixname'))).ipPrefix]",
 			"type" : "string"
         },
         "NatGatewayResourceId": {
-			"value": "[reference(concat('Microsoft.Network/natGateways/', parameters('natGatewayName'))).resourceGuid]",
+			"value": "[reference(concat('Microsoft.Network/publicIPPrefixes/', parameters('publicipprefixname'))).resourceGuid]",
 			"type" : "string"
         }
     }

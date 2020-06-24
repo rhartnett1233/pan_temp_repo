@@ -262,43 +262,17 @@
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "elbURL" : "[concat(parameters('gitRepoUrl'),'/deployExternalLoadBalancer.json')]",
         "pubIpURL" : "[concat(parameters('gitRepoUrl'),'/deployPublicIP.json')]",
-        "natGwURL" : "[concat(parameters('gitRepoUrl'),'/deployNatGw.json')]",
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', parameters('randomString'))]",
-        "natGatewayName": "[concat(variables('rgname'), '_nat_gw_', parameters('randomString'))]",
-        "natGatewayIpPrefixName": "[concat(variables('rgname'), '_nat_gw_prefix_', parameters('randomString'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
         "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
     },
     "resources": [
         {
-            "name": "SetupNatGw",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-11-01",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('natGwURL')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "natGatewayName": {
-                        "value": "[variables('natGatewayName')]"
-                    },
-                    "publicIpPrefixName": {
-                         "value": "[variables('natGatewayIpPrefixName')]"
-                    }
-                }
-            }
-        },
-        {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-11-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupNatGw"
-            ],
+            "apiVersion": "2015-01-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -325,7 +299,7 @@
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupDataSubnet",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-11-01",
+            "apiVersion": "2015-01-01",
             "dependsOn": [
                 "Microsoft.Resources/deployments/SetupMgmtSubnet"
             ],
