@@ -251,6 +251,13 @@
             "metadata": {
                 "description": "URL for github repo for nested template."
             }
+        },
+        "customDataString": {
+            "type": "string",
+            "defaultValue": "None",
+            "metadata": {
+                "description": "List of attributes to pass to the VM for bootstrapping."
+            }
         }
     },
     "variables": {
@@ -265,7 +272,7 @@
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', parameters('randomString'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
-        "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
+        "customDataField": "[if(equals(parameters(customDataString), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters(customDataString))]"
     },
     "resources": [
         {
