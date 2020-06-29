@@ -268,7 +268,7 @@
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', parameters('randomString'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
-        "customDataField": "[if(equals(parameters(customDataString), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters(customDataString))]"
+        "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters(customDataString))]"
     },
     "resources": [
         {
