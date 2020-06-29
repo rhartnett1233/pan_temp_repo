@@ -61,10 +61,6 @@
         },
         "imageVersion": {
             "type": "string",
-            "allowedValues": [
-                "latest",
-                "8.1.0"
-            ],
             "defaultValue": "latest",
             "metadata": {
                 "description": "PAN OS Version"
@@ -262,11 +258,6 @@
                 "tier": "Standard",
                 "capacity": "[parameters('vmScaleSetMinCount')]"
             },
-            "plan": {
-                 "name": "[parameters('vmSku')]",
-                 "product": "[variables('imageOffer')]",
-                 "publisher": "[variables('imagePublisher')]"
-            },
             "properties": {
                 "overprovision": "false",
                 "singlePlacementGroup": "false",
@@ -285,10 +276,7 @@
                         },
                         "dataDisks": [],
                         "imageReference": {
-                            "publisher": "[variables('imagePublisher')]",
-                            "offer": "[variables('imageOffer')]",
-                            "sku": "[parameters('vmSku')]",
-                            "version": "[parameters('imageVersion')]"
+                            "id": "[resourceId('Microsoft.Compute/images', parameters('imageVersion'))]"
                         }
                     },
                     "osProfile": {

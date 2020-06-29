@@ -118,10 +118,6 @@
         },
         "vmSeriesImageVersion": {
             "type": "string",
-            "allowedValues": [
-                "latest",
-                "8.1.0"
-            ],
             "defaultValue": "latest",
             "metadata": {
                 "description": "PAN OS Version"
