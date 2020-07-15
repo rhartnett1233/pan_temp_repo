@@ -163,18 +163,21 @@
         },
         "bootstrapStorageAccount": {
             "type": "string",
+            "defaultValue": "storageaccountname",
             "metadata":{
               "description": "The name of the storage account that contains the bootstrap file share."
             }
         },
         "bootstrapStorageAccountAccessKey": {
             "type": "securestring",
+            "defaultValue": "storageacountaccesskey",
             "metadata":{
               "description": "The access key for the bootstrap storage account."
             }
         },
         "bootstrapFileShare": {
             "type": "string",
+            "defaultValue": "storagefileshare",
             "metadata":{
                 "description": "The name of the file share that contains the bootstrap folders."
             }
