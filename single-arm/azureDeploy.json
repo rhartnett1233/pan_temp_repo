@@ -118,10 +118,6 @@
         },
         "vmSeriesImageVersion": {
             "type": "string",
-            "allowedValues": [
-                "latest",
-                "8.1.0"
-            ],
             "defaultValue": "latest",
             "metadata": {
                 "description": "PAN OS Version"
@@ -167,18 +163,21 @@
         },
         "bootstrapStorageAccount": {
             "type": "string",
+            "defaultValue": "storageaccountname",
             "metadata":{
               "description": "The name of the storage account that contains the bootstrap file share."
             }
         },
         "bootstrapStorageAccountAccessKey": {
             "type": "securestring",
+            "defaultValue": "storageacountaccesskey",
             "metadata":{
               "description": "The access key for the bootstrap storage account."
             }
         },
         "bootstrapFileShare": {
             "type": "string",
+            "defaultValue": "storagefileshare",
             "metadata":{
                 "description": "The name of the file share that contains the bootstrap folders."
             }
@@ -251,6 +250,13 @@
             "metadata": {
                 "description": "URL for github repo for nested template."
             }
+        },
+        "customDataString": {
+            "type": "string",
+            "defaultValue": "None",
+            "metadata": {
+                "description": "List of attributes to pass to the VM for bootstrapping."
+            }
         }
     },
     "variables": {
@@ -265,7 +271,7 @@
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', parameters('randomString'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
-        "customDataField": "[concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir'))]"
+        "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
     "resources": [
         {
