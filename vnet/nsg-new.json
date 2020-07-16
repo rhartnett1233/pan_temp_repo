@@ -8,10 +8,6 @@
       "nsgName": {
         "type": "string"
       },
-      "srcIPInboundNSG": {
-        "type": "array",
-        "defaultValue": []
-      },
       "virtualNetworkAddressPrefix": {
         "type": "string"
       }
@@ -27,20 +23,8 @@
         "name": "[parameters('nsgName')]",
         "location": "[parameters('location')]",
         "properties": {
-            "securityRules": [{
-                "name": "Allow-Outside-From-IP",
-                "properties": {
-                    "description": "Rule",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefixes": "[parameters('srcIPInboundNSG')]",
-                    "destinationAddressPrefix": "*",
-                    "access": "Allow",
-                    "priority": 100,
-                    "direction": "Inbound"
-                }
-            }, {
+            "securityRules": [
+              {
                 "name": "Allow-Intra",
                 "properties": {
                     "description": "Allow intra network traffic",

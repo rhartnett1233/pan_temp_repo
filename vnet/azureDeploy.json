@@ -68,9 +68,6 @@
                     "nsgName": {
                         "value": "[parameters('networkSecurityGroupName')]"
                     },
-                    "srcIPInboundNSG": {
-                        "value": "[parameters('networkSecurityGroupInboundSrcIP')]"
-                    },
                     "virtualNetworkAddressPrefix": {
                         "value": "[parameters('virtualNetworkAddressPrefix')]"
                     }
