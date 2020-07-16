@@ -3,10 +3,6 @@
     "contentVersion": "1.0.0.0",
 
     "parameters": {
-        "networkSecurityGroupInboundSrcIP": {
-            "type": "array",
-            "defaultValue": []
-        },
         "networkSecurityGroupName": {
             "type": "string",
             "defaultValue": "nsg-default1"
