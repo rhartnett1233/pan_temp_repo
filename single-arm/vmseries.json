@@ -61,7 +61,7 @@
         },
         "imageVersion": {
             "type": "string",
-            "defaultValue": "latest",
+            "defaultValue": "10.0.1",
             "metadata": {
                 "description": "PAN OS Version"
             }
@@ -206,8 +206,7 @@
         "ipConfigNameData": "[concat('ipconfigdata', parameters('randomString'))]",
         "ipConfigNamemgmt": "[concat('ipconfigmgmt', parameters('randomString'))]",
         "imagePublisher": "paloaltonetworks",
-        "imageOffer" : "vmseries1",
-        "version" : "latest",
+        "imageOffer" : "vmseries-beta",
         "location": "[resourceGroup().location]",
         "tempMgmtSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameMgmt'))]",
         "tempDataSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameData'))]",
@@ -258,6 +257,11 @@
                 "tier": "Standard",
                 "capacity": "[parameters('vmScaleSetMinCount')]"
             },
+            "plan": {
+                "name": "[parameters('vmSku')]",
+                "product": "[variables('imageOffer')]",
+                "publisher": "[variables('imagePublisher')]"
+            },
             "properties": {
                 "overprovision": "false",
                 "singlePlacementGroup": "false",
@@ -276,7 +280,11 @@
                         },
                         "dataDisks": [],
                         "imageReference": {
-                            "id": "[parameters('imageVersion')]"
+                            "publisher": "[variables('imagePublisher')]",
+                            "offer": "[variables('imageOffer')]",
+                            "sku": "[parameters('vmSku')]",
+                            "version": "[parameters('imageVersion')]"
+
                         }
                     },
                     "osProfile": {
