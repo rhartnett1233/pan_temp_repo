@@ -301,7 +301,10 @@
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
+            "apiVersion": "2019-11-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupNatGw"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -320,6 +323,9 @@
                     },
                     "networkSecurityGroupName": {
                         "value": "[parameters('networkSecurityGroupName')]"
+                    },
+                    "natGatewayName": {
+                        "value": "[variables('natGatewayName')]"
                     }
                 }
             }

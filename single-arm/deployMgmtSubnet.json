@@ -25,6 +25,13 @@
         },
         "networkSecurityGroupName": {
             "type": "string"
+        },
+        "natGatewayName": {
+            "type": "string",
+            "defaultValue": "None",
+            "metadata": {
+                "description": "NAT Gateway name to attach to the subnet"
+            }
         }
     },
     "variables": {
@@ -33,9 +40,12 @@
         {
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('mgmtSubnetName'))]",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2019-11-01",
             "properties": {
                 "addressPrefix": "[parameters('mgmtSubnetPrefix')]",
+                "natGateway": {
+                    "id": "[resourceId('Microsoft.Network/natGateways', parameters('natGatewayName'))]"
+                },
                 "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
