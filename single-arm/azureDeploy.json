@@ -251,6 +251,12 @@
                 "description": "URL for github repo for nested template."
             }
         },
+        "natGatewayName": {
+            "type": "string",
+            "metadata": {
+                "description": "NAT Gateway name for the mgmt and data interfaces."
+            }
+        },
         "customDataString": {
             "type": "string",
             "defaultValue": "None",
@@ -272,8 +278,7 @@
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', parameters('randomString'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
         "natGwURL" : "[concat(parameters('gitRepoUrl'),'/deployNatGw.json')]",
-        "natGatewayName": "[concat(variables('rgname'), '_nat_gw_', parameters('randomString'))]",
-        "natGatewayIpPrefixName": "[concat(variables('rgname'), '_nat_gw_prefix_', parameters('randomString'))]",
+        "natGatewayIpPrefixName": "[concat(parameters('natGatewayName'), '_nat_gw_ip_prefix')]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
     "resources": [
@@ -289,7 +294,7 @@
                 },
                 "parameters": {
                     "natGatewayName": {
-                        "value": "[variables('natGatewayName')]"
+                        "value": "[parameters('natGatewayName')]"
                     },
                     "publicIpPrefixName": {
                          "value": "[variables('natGatewayIpPrefixName')]"
@@ -325,7 +330,7 @@
                         "value": "[parameters('networkSecurityGroupName')]"
                     },
                     "natGatewayName": {
-                        "value": "[variables('natGatewayName')]"
+                        "value": "[parameters('natGatewayName')]"
                     }
                 }
             }
@@ -355,7 +360,7 @@
                          "value": "[parameters('dataSubnetPrefix')]"
                     },
                     "natGatewayName": {
-                        "value": "[variables('natGatewayName')]"
+                        "value": "[parameters('natGatewayName')]"
                     }
                 }
             }
