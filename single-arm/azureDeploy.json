@@ -353,6 +353,9 @@
                     },
                     "dataSubnetPrefix": {
                          "value": "[parameters('dataSubnetPrefix')]"
+                    },
+                    "natGatewayName": {
+                        "value": "[variables('natGatewayName')]"
                     }
                 }
             }
