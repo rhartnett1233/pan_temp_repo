@@ -139,18 +139,6 @@
                 "description": "Application Gateway Backend Pool Name"
             }
         },
-        "fwElbName": {
-            "type": "string",
-            "metadata": {
-                "description": "Application Gateway Name"
-            }
-        },
-        "fwElbBePoolName": {
-            "type": "string",
-            "metadata": {
-                "description": "Application Gateway Backend Pool Name"
-            }
-        },
         "appInsightsName": {
             "type": "string",
             "metadata": {
@@ -325,9 +313,6 @@
                                         "loadBalancerBackendAddressPools": [
                                             {
                                                 "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/', parameters('fwIlbBePoolName'))]"
-                                            },
-                                            {
-                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwElbName'), '/backendAddressPools/', parameters('fwElbBePoolName'))]"
                                             }
                                         ]
                                     }
