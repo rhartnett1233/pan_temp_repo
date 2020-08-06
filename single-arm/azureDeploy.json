@@ -79,25 +79,6 @@
                 "description": "FW ILB Name of the VM-Series firewall VM Scale Set."
             }
         },
-        "fwElbName": {
-            "type": "string",
-            "metadata": {
-                "description": "FW ELB Name of the VM-Series firewall VM Scale Set."
-            }
-        },
-        "elbIPAddressName": {
-            "type": "string",
-            "metadata": {
-                "description": "FW ELB IP Name of the VM-Series firewall VM Scale Set."
-            }
-        },
-        "elbDnsNamePrefix" : {
-            "type": "string",
-            "defaultValue": "fwelbdnsname",
-            "metadata": {
-                "description": "DNS name for external FW load balancer."
-            }
-        },
         "vmssName": {
             "type": "string",
             "metadata": {
@@ -257,6 +238,12 @@
                 "description": "NAT Gateway name for the mgmt and data interfaces."
             }
         },
+        "natGatewayIpPrefixName": {
+            "type": "string",
+            "metadata": {
+                "description": "NAT Gateway name for the mgmt and data interfaces."
+            }
+        },
         "customDataString": {
             "type": "string",
             "defaultValue": "None",
@@ -278,7 +265,6 @@
         "fwElbBePoolName": "[concat(variables('rgname'), '_fw_elb_backend_pool_', parameters('randomString'))]",
         "elbDnsName" : "[concat(parameters('elbDnsNamePrefix'), '.westus.cloudapp.azure.com')]",
         "natGwURL" : "[concat(parameters('gitRepoUrl'),'/deployNatGw.json')]",
-        "natGatewayIpPrefixName": "[concat(parameters('natGatewayName'), '_nat_gw_ip_prefix')]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
     "resources": [
@@ -297,7 +283,7 @@
                         "value": "[parameters('natGatewayName')]"
                     },
                     "publicIpPrefixName": {
-                         "value": "[variables('natGatewayIpPrefixName')]"
+                         "value": "[parameters('natGatewayIpPrefixName')]"
                     }
                 }
             }
@@ -405,68 +391,13 @@
             }
         },
         {
-            "name": "SetupPubIP",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupDataSubnet"
-            ],
-            "properties": { 
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('pubIpURL')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "elbIPAddressName": {
-                        "value": "[parameters('elbIPAddressName')]"
-                    },
-                    "elbDnsName": {
-                        "value": "[parameters('elbDnsNamePrefix')]"
-                    },
-                    "publicIPAddressType": {
-                        "value": "Static"
-                    }
-                }
-            }
-        },
-        {
-            "name": "SetupELB",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupDataSubnet",
-                "Microsoft.Resources/deployments/SetupPubIP"
-            ],
-            "properties": { 
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('elbURL')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "loadBalancerName": {
-                        "value": "[parameters('fwElbName')]"
-                    },
-                    "frontendIp": {
-                        "value": "[parameters('elbIPAddressName')]"
-                    },
-                    "fwELbBePoolName": {
-                        "value": "[variables('fwElbBePoolName')]"
-                    }
-                }
-            }
-        },
-        {
             "name": "SetupVMSeries",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
                 "Microsoft.Resources/deployments/SetupMgmtSubnet",
                 "Microsoft.Resources/deployments/SetupDataSubnet",
-                "Microsoft.Resources/deployments/SetupELB",
+                "Microsoft.Resources/deployments/SetupNatGw",
                 "Microsoft.Resources/deployments/SetupILB"
             ],
             "properties": {
