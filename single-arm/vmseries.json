@@ -302,6 +302,7 @@
                             "name": "[variables('nicNameDataIntfc')]",
                             "properties": {
                                 "primary": "false",
+                                "enableAcceleratedNetworking": "true",
                                 "enableIPForwarding": "true",
                                 "ipConfigurations": [
                                 {
