@@ -238,12 +238,6 @@
                 "description": "NAT Gateway name for the mgmt and data interfaces."
             }
         },
-        "natGatewayIpPrefixName": {
-            "type": "string",
-            "metadata": {
-                "description": "NAT Gateway name for the mgmt and data interfaces."
-            }
-        },
         "customDataString": {
             "type": "string",
             "defaultValue": "None",
@@ -260,39 +254,14 @@
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
-        "natGwURL" : "[concat(parameters('gitRepoUrl'),'/deployNatGw.json')]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
     "resources": [
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
-            "name": "SetupNatGw",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-11-01",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('natGwURL')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "natGatewayName": {
-                        "value": "[parameters('natGatewayName')]"
-                    },
-                    "publicIpPrefixName": {
-                         "value": "[parameters('natGatewayIpPrefixName')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-11-01",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/SetupNatGw"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -394,7 +363,6 @@
             "dependsOn": [
                 "Microsoft.Resources/deployments/SetupMgmtSubnet",
                 "Microsoft.Resources/deployments/SetupDataSubnet",
-                "Microsoft.Resources/deployments/SetupNatGw",
                 "Microsoft.Resources/deployments/SetupILB"
             ],
             "properties": {
