@@ -57,7 +57,7 @@
         "rgname" : "[resourceGroup().name]",
         "nsgURL" : "[concat(parameters('gitRepoUrl'),'/nsg-new.json')]",
         "vnetURL" : "[concat(parameters('gitRepoUrl'),'/deployVnet.json')]",
-        "natGwURL" : "[concat(parameters('gitRepoUrl'),'/deployNatGw.json')]",
+        "natGwURL" : "[concat(parameters('gitRepoUrl'),'/deployNatGw.json')]"
     },
     "resources": [
         {
