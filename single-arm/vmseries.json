@@ -194,7 +194,7 @@
         "ipConfigNameData": "[concat('ipconfigdata', parameters('randomString'))]",
         "ipConfigNamemgmt": "[concat('ipconfigmgmt', parameters('randomString'))]",
         "imagePublisher": "paloaltonetworks",
-        "imageOffer" : "vmseries",
+        "imageOffer" : "vmseries1",
         "location": "[resourceGroup().location]",
         "tempMgmtSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameMgmt'))]",
         "tempDataSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameData'))]",
