@@ -254,6 +254,7 @@
             "properties": {
                 "overprovision": "false",
                 "singlePlacementGroup": "false",
+                "platformFaultDomainCount" : 1,
                 "upgradePolicy": {
                     "mode": "Automatic"
                 },
