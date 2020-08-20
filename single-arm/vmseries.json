@@ -237,7 +237,6 @@
             "name": "[parameters('vmssName')]",
             "location": "[resourceGroup().location]",
             "apiVersion": "2017-12-01",
-            "zones": [ "1", "2", "3" ],
             "tags": {
                 "PanoramaManaged": "yes"
             },
