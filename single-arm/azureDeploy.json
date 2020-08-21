@@ -244,6 +244,12 @@
             "metadata": {
                 "description": "List of attributes to pass to the VM for bootstrapping."
             }
+        },
+        "zoneList": {
+            "type": "array",
+            "metadata": {
+                "description": "List of zones in region to deploys FWs."
+            }
         }
     },
     "variables": {
@@ -437,6 +443,9 @@
                     },
                     "randomString" : {
                         "value" : "[parameters('randomString')]"
+                    },
+                    "zoneList" : {
+                        "value" : "[parameters('zoneList')]"
                     }
                 }
             }

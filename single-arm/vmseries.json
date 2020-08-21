@@ -184,6 +184,12 @@
             "metadata": {
                 "description": "random string for resource naming."
             }
+        },
+        "zoneList": {
+            "type": "array",
+            "metadata": {
+                "description": "List of zones in region to deploys FWs."
+            }
         }
     },
     "variables": {
@@ -237,6 +243,7 @@
             "name": "[parameters('vmssName')]",
             "location": "[resourceGroup().location]",
             "apiVersion": "2017-12-01",
+            "zones" : "[parameters('zoneList')]",
             "tags": {
                 "PanoramaManaged": "yes"
             },
