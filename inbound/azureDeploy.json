@@ -99,6 +99,12 @@
                 "description": "FW ILB Name of the VM-Series firewall VM Scale Set."
             }
         },
+        "fwElbName": {
+            "type": "string",
+            "metadata": {
+                "description": "FW ELB Name of the VM-Series firewall VM Scale Set."
+            }
+        },
         "vmssName": {
             "type": "string",
             "metadata": {
@@ -277,6 +283,8 @@
         "rgname" : "[resourceGroup().name]",
         "mgmtSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployMgmtSubnet.json')]",
         "dataSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployDataSubnet.json')]",
+        "pubIpURL" : "[concat(parameters('gitRepoUrl'),'/deployPublicIP.json')]",
+        "elbIpURL" : "[concat(parameters('gitRepoUrl'),'/deployExternalLoadBalancer.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
@@ -369,6 +377,28 @@
                     },
                     "natGatewayName": {
                         "value": "[parameters('natGatewayName')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "SetupELB",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupMgmtSubnet",
+                "Microsoft.Resources/deployments/SetupDataUntrustSubnet",
+                "Microsoft.Resources/deployments/SetupDataTrustSubnet"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('elbIpURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "loadBalancerName": {
+                        "value": "[parameters('fwElbName')]"
                     }
                 }
             }

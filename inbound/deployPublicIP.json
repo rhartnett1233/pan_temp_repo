@@ -28,7 +28,6 @@
       "properties": {
         "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('elbDnsName')]"
         }
       }
     }
