@@ -22,13 +22,6 @@
             "metadata": {
                 "description": "Data subnet CIDR"
             }
-        },
-        "natGatewayName": {
-            "type": "string",
-            "defaultValue": "None",
-            "metadata": {
-                "description": "NAT Gateway name to attach to the subnet"
-            }
         }
     },
     "variables": {
@@ -39,10 +32,7 @@
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2015-06-15",
             "properties": {
-                "addressPrefix": "[parameters('dataSubnetPrefix')]",
-                "natGateway": {
-                    "id": "[resourceId('Microsoft.Network/natGateways', parameters('natGatewayName'))]"
-                }
+                "addressPrefix": "[parameters('dataSubnetPrefix')]"
             }
         }
     ],

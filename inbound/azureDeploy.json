@@ -344,9 +344,6 @@
                     },
                     "dataSubnetPrefix": {
                          "value": "[parameters('untrustSubnetPrefix')]"
-                    },
-                    "natGatewayName": {
-                        "value": "[parameters('natGatewayName')]"
                     }
                 }
             }
@@ -374,9 +371,6 @@
                     },
                     "dataSubnetPrefix": {
                          "value": "[parameters('trustSubnetPrefix')]"
-                    },
-                    "natGatewayName": {
-                        "value": "[parameters('natGatewayName')]"
                     }
                 }
             }
