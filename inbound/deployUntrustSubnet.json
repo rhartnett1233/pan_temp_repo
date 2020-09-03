@@ -40,7 +40,7 @@
             "properties": {
                 "addressPrefix": "[parameters('dataSubnetPrefix')]",
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('virtualNetworkName'))]"
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
                 }
             }
         }
