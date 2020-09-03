@@ -194,7 +194,7 @@
     },
     "variables": {
         "rgname": "[resourceGroup().id]",
-        "autoscaleName": "[concat('autoscale', parameters('randomString'))]",
+        "autoscaleName": "[concat('autoscale-hub', parameters('randomString'))]",
         "nicNameMgmt": "[concat('nicmgmt', parameters('randomString'))]",
         "nicNameDataIntfc": "[concat('nicdata', parameters('randomString'))]",
         "ipConfigNameData": "[concat('ipconfigdata', parameters('randomString'))]",

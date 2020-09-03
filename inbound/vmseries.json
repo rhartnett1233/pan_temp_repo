@@ -206,7 +206,7 @@
     },
     "variables": {
         "rgname": "[resourceGroup().id]",
-        "autoscaleName": "[concat('autoscale', parameters('randomString'))]",
+        "autoscaleName": "[concat('autoscale-inbound', parameters('randomString'))]",
         "nicNameMgmt": "[concat('nicmgmt', parameters('randomString'))]",
         "nicNameDataUntrustIntfc": "[concat('nicdatauntrust', parameters('randomString'))]",
         "nicNameDataTrustIntfc": "[concat('nicdatatrust', parameters('randomString'))]",
