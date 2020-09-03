@@ -276,21 +276,50 @@
             "metadata": {
                 "description": "List of zones in region to deploys FWs."
             }
+        },
+        "nsgName": {
+            "type": "string",
+            "metadata": {
+                "description": "NSG name for untrust subnet."
+            }
         }
     },
     "variables": {
         "location" : "[resourceGroup().location]",
         "rgname" : "[resourceGroup().name]",
         "mgmtSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployMgmtSubnet.json')]",
-        "dataSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployDataSubnet.json')]",
+        "untrustSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployUntrustSubnet.json')]",
+        "trustSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployTrustSubnet.json')]",
         "pubIpURL" : "[concat(parameters('gitRepoUrl'),'/deployPublicIP.json')]",
         "elbIpURL" : "[concat(parameters('gitRepoUrl'),'/deployExternalLoadBalancer.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
+        "nsgURL" : "[concat(parameters('gitRepoUrl'),'/nsg-new.json')]",
         "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
     "resources": [
+        {
+            "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
+            "name": "SetupNSG",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-06-15",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('nsgURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[variables('location')]"
+                    },
+                    "nsgName": {
+                         "value": "[parameters('nsgName')]"
+                    }
+                }
+            }
+        },
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
             "name": "SetupMgmtSubnet",
@@ -327,12 +356,13 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet"
+                "Microsoft.Resources/deployments/SetupMgmtSubnet",
+                "Microsoft.Resources/deployments/SetupNSG"
             ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('dataSubnetURL')]",
+                    "uri": "[variables('untrustSubnetURL')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -344,7 +374,10 @@
                     },
                     "dataSubnetPrefix": {
                          "value": "[parameters('untrustSubnetPrefix')]"
-                    }
+                    },
+                    "nsgName": {
+                         "value": "[parameters('nsgName')]"
+                    },
                 }
             }
         },
@@ -359,7 +392,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('dataSubnetURL')]",
+                    "uri": "[variables('trustSubnetURL')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
