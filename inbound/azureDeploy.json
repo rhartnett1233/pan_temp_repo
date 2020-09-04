@@ -325,6 +325,9 @@
             "name": "SetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-11-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupNSG"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -357,7 +360,6 @@
             "apiVersion": "2015-01-01",
             "dependsOn": [
                 "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupNSG"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -387,7 +389,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet"
+                "Microsoft.Resources/deployments/SetupDataUntrustSubnet"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -413,8 +415,6 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupDataUntrustSubnet",
                 "Microsoft.Resources/deployments/SetupDataTrustSubnet"
             ],
             "properties": {
@@ -435,8 +435,6 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupDataUntrustSubnet",
                 "Microsoft.Resources/deployments/SetupDataTrustSubnet"
             ],
             "properties": { 
@@ -475,10 +473,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupDataUntrustSubnet",
-                "Microsoft.Resources/deployments/SetupDataTrustSubnet",
-                "Microsoft.Resources/deployments/SetupILB"
+                "Microsoft.Resources/deployments/SetupILB",
+                "Microsoft.Resources/deployments/SetupELB"
             ],
             "properties": {
                 "mode": "Incremental",
