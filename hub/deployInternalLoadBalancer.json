@@ -135,7 +135,7 @@
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')),'/backendAddressPools/', parameters('fwIlbBePoolName'))]"
                             },
                             "probe": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')),'/probes/fw_health_probe')]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')),'/probes/', parameters('fwIlbHealthProbeName'))]"
                             }
                         }
                     }
