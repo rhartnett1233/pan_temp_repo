@@ -50,12 +50,12 @@
                 "frontendIPConfigurations": [],
                 "backendAddressPools": [
                     {
-                        "name": "[parameters('fwIlbBePoolName')]"
+                        "name": "[parameters('fwElbBePoolName')]"
                     }
                 ],
                 "probes": [
                     {
-                        "name": "[parameters('fwHealthProbeName')]",
+                        "name": "[parameters('fwElbHealthProbeName')]",
                         "properties": {
                             "protocol": "Tcp",
                             "port": 80,
