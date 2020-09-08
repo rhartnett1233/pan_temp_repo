@@ -294,18 +294,6 @@
             "metadata": {
                 "description": "ILB health probe name."
             }
-        },
-        "fwElbBePoolName": {
-            "type": "string",
-            "metadata": {
-                "description": "ELB backend pool name."
-            }
-        },
-        "fwElbHealthProbeName": {
-            "type": "string",
-            "metadata": {
-                "description": "ELB health probe name."
-            }
         }
     },
     "variables": {
@@ -449,12 +437,6 @@
                 "parameters": {
                     "loadBalancerName": {
                         "value": "[parameters('fwElbName')]"
-                    },
-                    "fwElbBePoolName": {
-                        "value": "[parameters('fwElbBePoolName')]"
-                    },
-                    "fwElbHealthProbeName": {
-                        "value": "[parameters('fwElbHealthProbeName')]"
                     }
                 }
             }
