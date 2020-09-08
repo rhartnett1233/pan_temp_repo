@@ -282,6 +282,30 @@
             "metadata": {
                 "description": "NSG name for untrust subnet."
             }
+        },
+        "fwIlbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "ILB backend pool name."
+            }
+        },
+        "fwIlbHealthProbeName": {
+            "type": "string",
+            "metadata": {
+                "description": "ILB health probe name."
+            }
+        },
+        "fwElbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "ELB backend pool name."
+            }
+        },
+        "fwElbHealthProbeName": {
+            "type": "string",
+            "metadata": {
+                "description": "ELB health probe name."
+            }
         }
     },
     "variables": {
@@ -295,7 +319,6 @@
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "nsgURL" : "[concat(parameters('gitRepoUrl'),'/nsg-new.json')]",
-        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
     "resources": [
@@ -359,7 +382,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
+                "Microsoft.Resources/deployments/SetupMgmtSubnet"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -426,6 +449,12 @@
                 "parameters": {
                     "loadBalancerName": {
                         "value": "[parameters('fwElbName')]"
+                    },
+                    "fwElbBePoolName": {
+                        "value": "[parameters('fwElbBePoolName')]"
+                    },
+                    "fwElbHealthProbeName": {
+                        "value": "[parameters('fwElbHealthProbeName')]"
                     }
                 }
             }
@@ -462,8 +491,11 @@
                     "loadBalancerIP": {
                         "value": "[parameters('fwLoadBalancerIP')]"
                     },
-                    "fwILbBePoolName": {
-                        "value": "[variables('fwIlbBePoolName')]"
+                    "fwIlbBePoolName": {
+                        "value": "[parameters('fwIlbBePoolName')]"
+                    },
+                    "fwIlbHealthProbeName": {
+                        "value": "[parameters('fwIlbHealthProbeName')]"
                     }
                 }
             }
@@ -538,7 +570,7 @@
                         "value": "[parameters('fwIlbName')]"
                     },
                     "fwIlbBePoolName": {
-                        "value": "[variables('fwIlbBePoolName')]"
+                        "value": "[parameters('fwIlbBePoolName')]"
                     },
                     "appInsightsName": {
                         "value": "[parameters('appInsightsName')]"

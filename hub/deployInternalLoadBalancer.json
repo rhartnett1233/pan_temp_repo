@@ -59,7 +59,13 @@
 			"metadata": {
 				"description": "Backend pool name of the load balancer"
 			}
-		}
+		},
+        "fwIlbHealthProbeName": {
+            "type": "string",
+            "metadata": {
+                "description": "Heath probe name"
+            }
+        }
 	},
 
 	"variables": {
@@ -101,7 +107,7 @@
                 ],
                 "probes": [
                     {
-                        "name": "fw_health_probe",
+                        "name": "[parameters('fwIlbHealthProbeName')]",
                         "properties": {
                             "protocol": "Tcp",
                             "port": 80,

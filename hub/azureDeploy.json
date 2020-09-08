@@ -250,6 +250,18 @@
             "metadata": {
                 "description": "List of zones in region to deploys FWs."
             }
+        },
+        "fwIlbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "ILB backend pool name."
+            }
+        },
+        "fwIlbHealthProbeName": {
+            "type": "string",
+            "metadata": {
+                "description": "ILB health probe name."
+            }
         }
     },
     "variables": {
@@ -259,7 +271,6 @@
         "dataSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployDataSubnet.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
-        "fwIlbBePoolName": "[concat(variables('rgname'), '_fw_ilb_backend_pool_', parameters('randomString'))]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
     "resources": [
@@ -357,7 +368,10 @@
                         "value": "[parameters('fwLoadBalancerIP')]"
                     },
                     "fwILbBePoolName": {
-                        "value": "[variables('fwIlbBePoolName')]"
+                        "value": "[parameters('fwIlbBePoolName')]"
+                    },
+                    "fwIlbHealthProbeName": {
+                        "value": "[parameters('fwIlbHealthProbeName')]"
                     }
                 }
             }
@@ -427,7 +441,7 @@
                         "value": "[parameters('fwIlbName')]"
                     },
                     "fwIlbBePoolName": {
-                        "value": "[variables('fwIlbBePoolName')]"
+                        "value": "[parameters('fwIlbBePoolName')]"
                     },
                     "appInsightsName": {
                         "value": "[parameters('appInsightsName')]"

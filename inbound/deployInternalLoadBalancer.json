@@ -1,24 +1,24 @@
 {
-	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
-	"parameters": {
-		"loadBalancerSku": {
-			"type": "string",
-			"allowedValues": [
-				"Standard",
-				"Basic"
-			],
-			"metadata": {
-				"description": "Standard or Basic"
-			},
-			"defaultValue": "Standard"
-		},
-		"virtualNetworkName": {
-			"type": "string",
-			"metadata": {
-				"description": "Name of the Virtual Network (VNET)"
-			}
-		},
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loadBalancerSku": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Basic"
+            ],
+            "metadata": {
+                "description": "Standard or Basic"
+            },
+            "defaultValue": "Standard"
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Virtual Network (VNET)"
+            }
+        },
         "deployIntoExistingVnet": {
             "type": "string",
             "defaultValue": "No",
@@ -30,46 +30,52 @@
                 "description": "If yes, then the template will deploy just the VM-Series firewall and subnets."
             }
         },
-		"subnetName": {
-			"type": "string",
-			"metadata": {
-				"description": "Name of the subnet"
-			}
-		},
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the subnet"
+            }
+        },
         "subnetID": {
             "type": "string",
             "metadata": {
                 "description": "Name of the subnet"
             }
         },
-		"loadBalancerName": {
-			"type": "string",
-			"metadata": {
-				"description": "Name of the inbound load balancer"
-			}
-		},
-		"loadBalancerIP": {
-			"type": "string",
-			"metadata": {
-				"description": "IP Address of the inbound load balancer in the Trust network"
-			}
-		},
-		"fwIlbBePoolName": {
-			"type": "string",
-			"metadata": {
-				"description": "Backend pool name of the load balancer"
-			}
-		}
-	},
+        "loadBalancerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the inbound load balancer"
+            }
+        },
+        "loadBalancerIP": {
+            "type": "string",
+            "metadata": {
+                "description": "IP Address of the inbound load balancer in the Trust network"
+            }
+        },
+        "fwIlbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "Backend pool name of the load balancer"
+            }
+        },
+        "fwIlbHealthProbeName": {
+            "type": "string",
+            "metadata": {
+                "description": "Heath Probe name"
+            }
+        }
+    },
 
-	"variables": {
-		"vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
+    "variables": {
+        "vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
         "location": "[resourceGroup().location]",
         "tempSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
-	},
+    },
 
-	"resources": [
-		{
+    "resources": [
+        {
             "type": "Microsoft.Network/loadBalancers",
             "sku": {
                 "name": "Standard",
@@ -101,7 +107,7 @@
                 ],
                 "probes": [
                     {
-                        "name": "fw_health_probe",
+                        "name": "[parameters('fwIlbHealthProbeName')]",
                         "properties": {
                             "protocol": "Tcp",
                             "port": 80,
@@ -139,11 +145,11 @@
                 "inboundNatPools": []
             }
         }
-	],
-	"outputs" : {
-		"LoadBalancerFrontEndIp": {
-			"value": "[reference(concat('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))).frontendIPConfigurations[0].properties.privateIPAddress ]",
-			"type" : "string"
-		}
-	}
+    ],
+    "outputs" : {
+        "LoadBalancerFrontEndIp": {
+            "value": "[reference(concat('Microsoft.Network/loadBalancers/', parameters('loadBalancerName'))).frontendIPConfigurations[0].properties.privateIPAddress ]",
+            "type" : "string"
+        }
+    }
 }
