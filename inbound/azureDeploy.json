@@ -3,12 +3,6 @@
     "contentVersion": "1.0.0.0",
 
     "parameters": {
-        "networkSecurityGroupName": {
-            "type": "string",
-             "metadata": {
-                 "description": "The IP address that you want to use to access the management interface on the firewall(s). This IP address will be added to the inbound NSG on eth0(MGMT) to restrict access."
-             }
-        },
         "fwLoadBalancerIP": {
             "type": "string",
             "metadata": {
@@ -354,9 +348,6 @@
                     },
                     "mgmtSubnetPrefix": {
                          "value": "[parameters('mgmtSubnetPrefix')]"
-                    },
-                    "networkSecurityGroupName": {
-                        "value": "[parameters('networkSecurityGroupName')]"
                     },
                     "natGatewayName": {
                         "value": "[parameters('natGatewayName')]"

@@ -3,10 +3,6 @@
     "contentVersion": "1.0.0.0",
 
     "parameters": {
-        "networkSecurityGroupName": {
-            "type": "string",
-            "defaultValue": "nsg-default1"
-        },
         "deployIntoExistingVnet": {
              "type": "string",
              "defaultValue": "No",
@@ -60,29 +56,6 @@
         "natGwURL" : "[concat(parameters('gitRepoUrl'),'/deployNatGw.json')]"
     },
     "resources": [
-        {
-            "name": "SetupNSG",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "properties": { 
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('nsgURL')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "location": {
-                        "value": "[variables('location')]"
-                    },
-                    "nsgName": {
-                        "value": "[parameters('networkSecurityGroupName')]"
-                    },
-                    "virtualNetworkAddressPrefix": {
-                        "value": "[parameters('virtualNetworkAddressPrefix')]"
-                    }
-                }
-            }
-        },
         {
             "name": "SetupNatGw",
             "type": "Microsoft.Resources/deployments",

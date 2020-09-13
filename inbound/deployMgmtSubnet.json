@@ -23,9 +23,6 @@
                 "description": "Mgmt subnet CIDR"
             }
         },
-        "networkSecurityGroupName": {
-            "type": "string"
-        },
         "natGatewayName": {
             "type": "string",
             "defaultValue": "None",
@@ -45,9 +42,6 @@
                 "addressPrefix": "[parameters('mgmtSubnetPrefix')]",
                 "natGateway": {
                     "id": "[resourceId('Microsoft.Network/natGateways', parameters('natGatewayName'))]"
-                },
-                "networkSecurityGroup": {
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
             }
         }
