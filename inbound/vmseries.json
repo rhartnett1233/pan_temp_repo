@@ -202,7 +202,20 @@
             "metadata": {
                 "description": "List of zones in region to deploys FWs."
             }
+        },
+        "fwElbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "elb backend pool name."
+            }
+        },
+        "fwElbName": {
+            "type": "string",
+            "metadata": {
+                "description": "elb name."
+            }
         }
+        
     },
     "variables": {
         "rgname": "[resourceGroup().id]",
@@ -337,6 +350,9 @@
                                         "loadBalancerBackendAddressPools": [
                                             {
                                                 "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/', parameters('fwIlbBePoolName'))]"
+                                            },
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwElbName'), '/backendAddressPools/', parameters('fwElbBePoolName'))]"
                                             }
                                         ]
                                     }

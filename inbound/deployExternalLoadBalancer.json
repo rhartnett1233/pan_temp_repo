@@ -18,6 +18,24 @@
             "metadata": {
                 "description": "Name of the inbound load balancer"
             }
+        },
+        "ipName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of frontend IP."
+            }
+        },
+        "backendPoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of VMSS backend pool."
+            }
+        },
+        "healthProbeName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of VMSS health probe."
+            }
         }
     },
     "variables": {
@@ -35,9 +53,34 @@
                 "name": "[parameters('loadBalancerSku')]"
             },
             "properties": {
-                "frontendIPConfigurations": [],
-                "backendAddressPools": [],
-                "probes": [],
+                "frontendIPConfigurations":[
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('ipName'))]"
+                            },
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name" : "[parameters('backendPoolName')]"
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "[parameters('healthProbeName')]",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 80,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ],
                 "loadBalancingRules": [],
                 "outboundRules": [],
                 "inboundNatPools": []
