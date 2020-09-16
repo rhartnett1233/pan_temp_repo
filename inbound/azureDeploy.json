@@ -288,6 +288,30 @@
             "metadata": {
                 "description": "ILB health probe name."
             }
+        },
+        "fwElbBePoolName": {
+            "type": "string",
+            "metadata": {
+                "description": "ELB backend pool name."
+            }
+        },
+        "fwElbHealthProbeName": {
+            "type": "string",
+            "metadata": {
+                "description": "ELB health probe name."
+            }
+        },
+        "publicIpName": {
+            "type": "string",
+            "metadata": {
+                "description": "ELB public IP name."
+            }
+        },
+        "elbDefaultFrontendName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name for default frontent on ELB."
+            }
         }
     },
     "variables": {
@@ -413,11 +437,31 @@
             }
         },
         {
-            "name": "SetupELB",
+            "name": "SetupIP",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
                 "Microsoft.Resources/deployments/SetupDataTrustSubnet"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('pubIpURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ipName": {
+                        "value": "[parameters('publicIpName')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "SetupELB",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/SetupIP"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -428,8 +472,21 @@
                 "parameters": {
                     "loadBalancerName": {
                         "value": "[parameters('fwElbName')]"
+                    },
+                    "ipName": {
+                        "value": "[parameters('publicIpName')]"
+                    },
+                    "backendPoolName": {
+                        "value": "[parameters('fwElbBePoolName')]"
+                    },
+                    "healthProbeName": {
+                        "value": "[parameters('fwElbHealthProbeName')]"
+                    },
+                    "frontendName": {
+                        "value": "[parameters('elbDefaultFrontendName')]"
                     }
                 }
+                
             }
         },
         {
@@ -562,7 +619,14 @@
                     },
                     "zoneList" : {
                         "value" : "[parameters('zoneList')]"
+                    },
+                    "fwElbBePoolName" : {
+                        "value" : "[parameters('fwElbBePoolName')]"
+                    },
+                    "fwElbName" : {
+                        "value" : "[parameters('fwElbName')]"
                     }
+                    
                 }
             }
         }

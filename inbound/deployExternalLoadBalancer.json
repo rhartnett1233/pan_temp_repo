@@ -36,6 +36,12 @@
             "metadata": {
                 "description": "Name of VMSS health probe."
             }
+        },
+        "frontendName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of lb frontend."
+            }
         }
     },
     "variables": {
@@ -55,7 +61,7 @@
             "properties": {
                 "frontendIPConfigurations":[
                     {
-                        "name": "LoadBalancerFrontEnd",
+                        "name": "[parameters('frontendName')]",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
