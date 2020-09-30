@@ -312,7 +312,7 @@
                         }
                     },
                     "osProfile": {
-                        "computerNamePrefix": "[concat('pavm', parameters('randomString'))]",
+                        "computerNamePrefix": "[concat('pavminbd', parameters('randomString'))]",
                         "adminUsername": "[parameters('adminUsername')]",
                         "adminPassword": "[parameters('adminPassword')]",
                         "customData": "[base64(parameters('customDataField'))]"
