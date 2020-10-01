@@ -270,7 +270,7 @@
     "resources": [
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
-            "name": "SetupMgmtSubnet",
+            "name": "HubSetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-11-01",
             "properties": {
@@ -297,11 +297,11 @@
         },
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
-            "name": "SetupDataSubnet",
+            "name": "HubSetupDataSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet"
+                "Microsoft.Resources/deployments/HubSetupMgmtSubnet"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -326,12 +326,12 @@
             }
         },
         {
-            "name": "SetupILB",
+            "name": "HubSetupILB",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupDataSubnet"
+                "Microsoft.Resources/deployments/HubSetupMgmtSubnet",
+                "Microsoft.Resources/deployments/HubSetupDataSubnet"
             ],
             "properties": { 
                 "mode": "Incremental",
@@ -368,13 +368,13 @@
             }
         },
         {
-            "name": "SetupVMSeries",
+            "name": "HubSetupVMSeries",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet",
-                "Microsoft.Resources/deployments/SetupDataSubnet",
-                "Microsoft.Resources/deployments/SetupILB"
+                "Microsoft.Resources/deployments/HubSetupMgmtSubnet",
+                "Microsoft.Resources/deployments/HubSetupDataSubnet",
+                "Microsoft.Resources/deployments/HubSetupILB"
             ],
             "properties": {
                 "mode": "Incremental",

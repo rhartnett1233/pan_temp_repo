@@ -330,7 +330,7 @@
     "resources": [
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
-            "name": "SetupNSG",
+            "name": "InboundSetupNSG",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2016-06-01",
             "properties": {
@@ -351,11 +351,11 @@
         },
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
-            "name": "SetupMgmtSubnet",
+            "name": "InboundSetupMgmtSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-11-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupNSG"
+                "Microsoft.Resources/deployments/InboundSetupNSG"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -381,11 +381,11 @@
         },
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
-            "name": "SetupDataUntrustSubnet",
+            "name": "InboundSetupDataUntrustSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupMgmtSubnet"
+                "Microsoft.Resources/deployments/InboundSetupMgmtSubnet"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -411,11 +411,11 @@
         },
         {
             "condition": "[equals(parameters('deployIntoExistingVnet'), 'No')]",
-            "name": "SetupDataTrustSubnet",
+            "name": "InboundSetupDataTrustSubnet",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupDataUntrustSubnet"
+                "Microsoft.Resources/deployments/InboundSetupDataUntrustSubnet"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -437,11 +437,11 @@
             }
         },
         {
-            "name": "SetupIP",
+            "name": "InboundSetupIP",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupDataTrustSubnet"
+                "Microsoft.Resources/deployments/InboundSetupDataTrustSubnet"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -457,11 +457,11 @@
             }
         },
         {
-            "name": "SetupELB",
+            "name": "InboundSetupELB",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupIP"
+                "Microsoft.Resources/deployments/InboundSetupIP"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -490,11 +490,11 @@
             }
         },
         {
-            "name": "SetupILB",
+            "name": "InboundSetupILB",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupDataTrustSubnet"
+                "Microsoft.Resources/deployments/InboundSetupDataTrustSubnet"
             ],
             "properties": { 
                 "mode": "Incremental",
@@ -531,12 +531,12 @@
             }
         },
         {
-            "name": "SetupVMSeries",
+            "name": "InboundSetupVMSeries",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
-                "Microsoft.Resources/deployments/SetupILB",
-                "Microsoft.Resources/deployments/SetupELB"
+                "Microsoft.Resources/deployments/InboundSetupILB",
+                "Microsoft.Resources/deployments/InboundSetupELB"
             ],
             "properties": {
                 "mode": "Incremental",
