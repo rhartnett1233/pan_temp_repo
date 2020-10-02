@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
 
     "parameters": {
-        "fwLoadBalancerIP": {
+        "fwLoadBalancerDataIP": {
             "type": "string",
             "metadata": {
                 "description": "IP Address of the Internal Load Balancer in front of the firewall. This should be an IP in the Untrust subnet."
@@ -495,10 +495,10 @@
                         "value": "[parameters('fwIlbName')]"
                     },
                     "loadBalancerDataIP": {
-                        "value": "[parameters('loadBalancerDataIP')]"
+                        "value": "[parameters('fwLoadBalancerDataIP')]"
                     },
                     "loadBalancerMgmtIP": {
-                        "value": "[parameters('loadBalancerMgmtIP')]"
+                        "value": "[parameters('fwLoadBalancerMgmtIP')]"
                     }
                 }
             }
