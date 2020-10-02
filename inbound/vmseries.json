@@ -145,12 +145,6 @@
                 "description": "Application Gateway Name"
             }
         },
-        "fwIlbBePoolName": {
-            "type": "string",
-            "metadata": {
-                "description": "Application Gateway Backend Pool Name"
-            }
-        },
         "appInsightsName": {
             "type": "string",
             "metadata": {
@@ -219,7 +213,7 @@
     },
     "variables": {
         "rgname": "[resourceGroup().id]",
-        "autoscaleName": "[concat('autoscale-inbound', parameters('randomString'))]",
+        "autoscaleName": "[concat('deployment-inbound', parameters('randomString'))]",
         "nicNameMgmt": "[concat('nicmgmt', parameters('randomString'))]",
         "nicNameDataUntrustIntfc": "[concat('nicdatauntrust', parameters('randomString'))]",
         "nicNameDataTrustIntfc": "[concat('nicdatatrust', parameters('randomString'))]",
@@ -290,7 +284,13 @@
                 "singlePlacementGroup": "false",
                 "platformFaultDomainCount" : 1,
                 "upgradePolicy": {
-                    "mode": "Automatic"
+                    "mode": "Rolling",
+                    "rollingUpgradePolicy": {
+                        "maxBatchInstancePercent": 20,
+                        "maxUnhealthyInstancePercent": 20,
+                        "maxUnhealthyUpgradedInstancePercent": 20,
+                        "pauseTimeBetweenBatches": "PT0S"
+                    }
                 },
                 "virtualMachineProfile": {
                     "storageProfile": {
@@ -318,6 +318,9 @@
                         "customData": "[base64(parameters('customDataField'))]"
                     },
                     "networkProfile": {
+                        "healthProbe": {
+                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/probes/fw-mgmt-health-probe')]"
+                        },
                         "networkInterfaceConfigurations": [
                         {
                             "name": "[variables('nicNameMgmt')]",
@@ -329,7 +332,12 @@
                                     "properties": {
                                         "subnet": {
                                             "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempMgmtSubnetID'), parameters('subnetIDMgmt'))]"
-                                        }
+                                        },
+                                        "loadBalancerBackendAddressPools": [
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/fw-mgmt-backend-pool')]"
+                                            }
+                                        ]
                                     }
                                 }]
                             }
@@ -349,10 +357,10 @@
                                         },
                                         "loadBalancerBackendAddressPools": [
                                             {
-                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/', parameters('fwIlbBePoolName'))]"
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/fw-data-backend-pool')]"
                                             },
                                             {
-                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwElbName'), '/backendAddressPools/', parameters('fwElbBePoolName'))]"
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwElbName'), '/backendAddressPools/fw-elb-backend-pool')]"
                                             }
                                         ]
                                     }

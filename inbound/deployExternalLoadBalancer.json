@@ -25,18 +25,6 @@
                 "description": "Name of frontend IP."
             }
         },
-        "backendPoolName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of VMSS backend pool."
-            }
-        },
-        "healthProbeName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of VMSS health probe."
-            }
-        },
         "frontendName": {
             "type": "string",
             "metadata": {
@@ -73,12 +61,12 @@
                 ],
                 "backendAddressPools": [
                     {
-                        "name" : "[parameters('backendPoolName')]"
+                        "name" : "fw-elb-backend-pool"
                     }
                 ],
                 "probes": [
                     {
-                        "name": "[parameters('healthProbeName')]",
+                        "name": "fw-elb-health-probe",
                         "properties": {
                             "protocol": "Tcp",
                             "port": 80,

@@ -9,6 +9,12 @@
                 "description": "IP Address of the Internal Load Balancer in front of the firewall. This should be an IP in the Untrust subnet."
             }
         },
+        "fwLoadBalancerMgmtIP": {
+            "type": "string",
+            "metadata": {
+                "description": "IP Address of the Internal Load Balancer in front of the firewall. This should be an IP in the Untrust subnet."
+            }
+        },
         "virtualNetworkName": {
             "type": "string",
             "defaultValue": "inbound-fw-vnet",
@@ -277,30 +283,6 @@
                 "description": "NSG name for untrust subnet."
             }
         },
-        "fwIlbBePoolName": {
-            "type": "string",
-            "metadata": {
-                "description": "ILB backend pool name."
-            }
-        },
-        "fwIlbHealthProbeName": {
-            "type": "string",
-            "metadata": {
-                "description": "ILB health probe name."
-            }
-        },
-        "fwElbBePoolName": {
-            "type": "string",
-            "metadata": {
-                "description": "ELB backend pool name."
-            }
-        },
-        "fwElbHealthProbeName": {
-            "type": "string",
-            "metadata": {
-                "description": "ELB health probe name."
-            }
-        },
         "publicIpName": {
             "type": "string",
             "metadata": {
@@ -476,12 +458,6 @@
                     "ipName": {
                         "value": "[parameters('publicIpName')]"
                     },
-                    "backendPoolName": {
-                        "value": "[parameters('fwElbBePoolName')]"
-                    },
-                    "healthProbeName": {
-                        "value": "[parameters('fwElbHealthProbeName')]"
-                    },
                     "frontendName": {
                         "value": "[parameters('elbDefaultFrontendName')]"
                     }
@@ -518,14 +494,11 @@
                     "loadBalancerName": {
                         "value": "[parameters('fwIlbName')]"
                     },
-                    "loadBalancerIP": {
-                        "value": "[parameters('fwLoadBalancerIP')]"
+                    "loadBalancerDataIP": {
+                        "value": "[parameters('loadBalancerDataIP')]"
                     },
-                    "fwIlbBePoolName": {
-                        "value": "[parameters('fwIlbBePoolName')]"
-                    },
-                    "fwIlbHealthProbeName": {
-                        "value": "[parameters('fwIlbHealthProbeName')]"
+                    "loadBalancerMgmtIP": {
+                        "value": "[parameters('loadBalancerMgmtIP')]"
                     }
                 }
             }
@@ -599,9 +572,6 @@
                     "fwIlbName": {
                         "value": "[parameters('fwIlbName')]"
                     },
-                    "fwIlbBePoolName": {
-                        "value": "[parameters('fwIlbBePoolName')]"
-                    },
                     "appInsightsName": {
                         "value": "[parameters('appInsightsName')]"
                     },
@@ -619,9 +589,6 @@
                     },
                     "zoneList" : {
                         "value" : "[parameters('zoneList')]"
-                    },
-                    "fwElbBePoolName" : {
-                        "value" : "[parameters('fwElbBePoolName')]"
                     },
                     "fwElbName" : {
                         "value" : "[parameters('fwElbName')]"
