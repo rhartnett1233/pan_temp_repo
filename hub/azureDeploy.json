@@ -3,7 +3,13 @@
     "contentVersion": "1.0.0.0",
 
     "parameters": {
-        "fwLoadBalancerIP": {
+        "fwLoadBalancerDataIP": {
+            "type": "string",
+            "metadata": {
+                "description": "IP Address of the Internal Load Balancer in front of the firewall. This should be an IP in the Untrust subnet."
+            }
+        },
+        "fwLoadBalancerMgmtIP": {
             "type": "string",
             "metadata": {
                 "description": "IP Address of the Internal Load Balancer in front of the firewall. This should be an IP in the Untrust subnet."
@@ -244,18 +250,6 @@
             "metadata": {
                 "description": "List of zones in region to deploys FWs."
             }
-        },
-        "fwIlbBePoolName": {
-            "type": "string",
-            "metadata": {
-                "description": "ILB backend pool name."
-            }
-        },
-        "fwIlbHealthProbeName": {
-            "type": "string",
-            "metadata": {
-                "description": "ILB health probe name."
-            }
         }
     },
     "variables": {
@@ -355,14 +349,11 @@
                     "loadBalancerName": {
                         "value": "[parameters('fwIlbName')]"
                     },
-                    "loadBalancerIP": {
-                        "value": "[parameters('fwLoadBalancerIP')]"
+                    "loadBalancerDataIP": {
+                        "value": "[parameters('fwLoadBalancerDataIP')]"
                     },
-                    "fwILbBePoolName": {
-                        "value": "[parameters('fwIlbBePoolName')]"
-                    },
-                    "fwIlbHealthProbeName": {
-                        "value": "[parameters('fwIlbHealthProbeName')]"
+                    "loadBalancerMgmtIP": {
+                        "value": "[parameters('fwLoadBalancerMgmtIP')]"
                     }
                 }
             }
@@ -430,9 +421,6 @@
                     },
                     "fwIlbName": {
                         "value": "[parameters('fwIlbName')]"
-                    },
-                    "fwIlbBePoolName": {
-                        "value": "[parameters('fwIlbBePoolName')]"
                     },
                     "appInsightsName": {
                         "value": "[parameters('appInsightsName')]"
