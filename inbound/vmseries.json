@@ -215,7 +215,7 @@
         "ipConfigNameDataTrust": "[concat('ipconfigdatatrust', parameters('randomString'))]",
         "ipConfigNamemgmt": "[concat('ipconfigmgmt', parameters('randomString'))]",
         "imagePublisher": "paloaltonetworks",
-        "imageOffer" : "vmseries-beta",
+        "imageOffer" : "vmseries-flex",
         "location": "[resourceGroup().location]",
         "tempMgmtSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameMgmt'))]",
         "tempDataUntrustSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameDataUntrust'))]",
