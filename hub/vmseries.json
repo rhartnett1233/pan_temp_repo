@@ -184,6 +184,13 @@
             "metadata": {
                 "description": "List of zones in region to deploys FWs."
             }
+        },
+        "customImageId": {
+            "type": "string",
+            "defaultValue": "None",
+            "metadata": {
+                "description": "string for custom image."
+            }
         }
     },
     "variables": {
@@ -233,6 +240,116 @@
     },
     "resources": [
         {
+            "condition": "[equals(parameters('customImageId'), 'None')]",
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "name": "[parameters('vmssName')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2017-12-01",
+            "zones" : "[parameters('zoneList')]",
+            "tags": {
+                "PanoramaManaged": "yes"
+            },
+            "sku": {
+                "name": "[parameters('vmSize')]",
+                "tier": "Standard",
+                "capacity": "[parameters('vmScaleSetMinCount')]"
+            },
+            "plan": {
+                "name": "[parameters('vmSku')]",
+                "product": "[variables('imageOffer')]",
+                "publisher": "[variables('imagePublisher')]"
+            },
+            "properties": {
+                "overprovision": "false",
+                "singlePlacementGroup": "false",
+                "platformFaultDomainCount" : 1,
+                "upgradePolicy": {
+                    "mode": "Rolling",
+                    "rollingUpgradePolicy": {
+                        "maxBatchInstancePercent": 20,
+                        "maxUnhealthyInstancePercent": 20,
+                        "maxUnhealthyUpgradedInstancePercent": 20,
+                        "pauseTimeBetweenBatches": "PT0S"
+                    }
+                },
+                "virtualMachineProfile": {
+                    "storageProfile": {
+                        "osDisk": {
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            },
+                            "caching": "ReadWrite",
+                            "createOption": "FromImage",
+                            "diskSizeGB": 60
+                        },
+                        "dataDisks": [],
+                        "imageReference": {
+                            "publisher": "[variables('imagePublisher')]",
+                            "offer": "[variables('imageOffer')]",
+                            "sku": "[parameters('vmSku')]",
+                            "version": "[parameters('imageVersion')]"
+
+                        }
+                    },
+                    "osProfile": {
+                        "computerNamePrefix": "[concat('pavmhub', parameters('randomString'))]",
+                        "adminUsername": "[parameters('adminUsername')]",
+                        "adminPassword": "[parameters('adminPassword')]",
+                        "customData": "[base64(parameters('customDataField'))]"
+                    },
+                    "networkProfile": {
+                        "healthProbe": {
+                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/probes/fw-mgmt-health-probe')]"
+                        },
+                        "networkInterfaceConfigurations": [
+                        {
+                            "name": "[variables('nicNameMgmt')]",
+                            "properties": {
+                                "primary": "true",
+                                "ipConfigurations": [
+                                {
+                                    "name": "[variables('ipConfigNamemgmt')]",
+                                    "properties": {
+                                        "subnet": {
+                                            "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempMgmtSubnetID'), parameters('subnetIDMgmt'))]"
+                                        },
+                                        "loadBalancerBackendAddressPools": [
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/fw-mgmt-backend-pool')]"
+                                            }
+                                        ]
+                                    }
+                                }]
+                            }
+                        },
+                        {
+                            "name": "[variables('nicNameDataIntfc')]",
+                            "properties": {
+                                "primary": "false",
+                                "enableAcceleratedNetworking": "true",
+                                "enableIPForwarding": "true",
+                                "ipConfigurations": [
+                                {
+                                    "name": "[variables('ipConfigNameData')]",
+                                    "properties": {
+                                        "subnet": {
+                                            "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempDataSubnetID'), parameters('subnetIDData'))]"
+                                        },
+                                        "loadBalancerBackendAddressPools": [
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/fw-data-backend-pool')]"
+                                            }
+                                        ]
+                                    }
+                                }]
+                            }
+                        }]
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[not(equals(parameters('customImageId'), 'None'))]",
             "type": "Microsoft.Compute/virtualMachineScaleSets",
             "name": "[parameters('vmssName')]",
             "location": "[resourceGroup().location]",
