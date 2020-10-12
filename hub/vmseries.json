@@ -393,10 +393,7 @@
                         },
                         "dataDisks": [],
                         "imageReference": {
-                            "publisher": "[variables('imagePublisher')]",
-                            "offer": "[variables('imageOffer')]",
-                            "sku": "[parameters('vmSku')]",
-                            "version": "[parameters('imageVersion')]"
+                            "id" : "[parameters('customImageId')]"
 
                         }
                     },
