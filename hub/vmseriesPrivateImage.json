@@ -184,6 +184,13 @@
             "metadata": {
                 "description": "List of zones in region to deploys FWs."
             }
+        },
+        "customImageId": {
+            "type": "string",
+            "defaultValue": "None",
+            "metadata": {
+                "description": "string for custom image."
+            }
         }
     },
     "variables": {
@@ -276,10 +283,7 @@
                         },
                         "dataDisks": [],
                         "imageReference": {
-                            "publisher": "[variables('imagePublisher')]",
-                            "offer": "[variables('imageOffer')]",
-                            "sku": "[parameters('vmSku')]",
-                            "version": "[parameters('imageVersion')]"
+                            "id" : "[parameters('customImageId')]"
 
                         }
                     },
