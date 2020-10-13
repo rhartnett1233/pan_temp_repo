@@ -99,7 +99,7 @@
         },
         "vmSeriesImageVersion": {
             "type": "string",
-            "defaultValue": "latest",
+            "defaultValue": "None",
             "metadata": {
                 "description": "PAN OS Version"
             }
@@ -250,6 +250,13 @@
             "metadata": {
                 "description": "List of zones in region to deploys FWs."
             }
+        },
+        "customImageId": {
+            "type": "string",
+            "defaultValue": "None",
+            "metadata": {
+                "description": "string for custom image."
+            }
         }
     },
     "variables": {
@@ -258,6 +265,7 @@
         "mgmtSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployMgmtSubnet.json')]",
         "dataSubnetURL" : "[concat(parameters('gitRepoUrl'),'/deployDataSubnet.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
+        "vmseriesPrivateImageURL" : "[concat(parameters('gitRepoUrl'),'/vmseriesPrivateImage.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
     },
@@ -359,6 +367,93 @@
             }
         },
         {
+            "condition": "[not(equals(parameters('customImageId'), 'None'))]",
+            "name": "HubSetupVMSeriesPrivateImage",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/HubSetupMgmtSubnet",
+                "Microsoft.Resources/deployments/HubSetupDataSubnet",
+                "Microsoft.Resources/deployments/HubSetupILB"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vmseriesPrivateImageURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmssName": {
+                        "value": "[parameters('vmssName')]"
+                    },
+                    "vmSize": {
+                         "value": "[parameters('vmSeriesFirewallVmSize')]"
+                    },
+                    "vmScaleSetMinCount": {
+                        "value": "[parameters('vmScaleSetMinCount')]"
+                    },
+                    "vmScaleSetMaxCount": {
+                        "value": "[parameters('vmScaleSetMaxCount')]"
+                    },
+                    "vmSku": {
+                        "value": "[parameters('vmSeriesFirewallModel')]"
+                    },
+                    "adminUsername": {
+                         "value": "[parameters('username')]"
+                    },
+                    "adminPassword": {
+                         "value": "[parameters('password')]"
+                    },
+                    "customDataField": {
+                        "value": "[variables('customDataField')]"
+                    },
+                    "virtualNetworkName": {
+                         "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "deployIntoExistingVnet": {
+                        "value": "[parameters('deployIntoExistingVnet')]"
+                    },
+                    "subnetNameMgmt": {
+                        "value": "[parameters('mgmtSubnetName')]"
+                    },
+                    "subnetIDMgmt": {
+                        "value": "[parameters('mgmtSubnetID')]"
+                    },
+                    "subnetNameData": {
+                        "value": "[parameters('dataSubnetName')]"
+                    },
+                    "subnetIDData": {
+                        "value": "[parameters('dataSubnetID')]"
+                    },
+                    "fwIlbName": {
+                        "value": "[parameters('fwIlbName')]"
+                    },
+                    "appInsightsName": {
+                        "value": "[parameters('appInsightsName')]"
+                    },
+                    "autoScaleMetric": {
+                        "value": "[parameters('autoScaleMetric')]"
+                    },
+                    "scaleInThreshold": {
+                        "value": "[parameters('scaleInThreshold')]"
+                    },
+                    "scaleOutThreshold": {
+                        "value": "[parameters('scaleOutThreshold')]"
+                    },
+                    "randomString" : {
+                        "value" : "[parameters('randomString')]"
+                    },
+                    "zoneList" : {
+                        "value" : "[parameters('zoneList')]"
+                    },
+                    "customImageId" : {
+                        "value" : "[parameters('customImageId')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('customImageId'), 'None')]",
             "name": "HubSetupVMSeries",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
@@ -439,10 +534,7 @@
                     },
                     "zoneList" : {
                         "value" : "[parameters('zoneList')]"
-                    },
-                    "customImageId" : {
-                        "value" : "/subscriptions/1adc902d-2621-40cb-8109-6ab72c2c26c8/resourceGroups/pavmqa-automation-img/providers/Microsoft.Compute/images/PA-VM-AZR-10.0.1"
-                    }                    
+                    }
                 }
             }
         }

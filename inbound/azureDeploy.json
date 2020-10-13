@@ -125,7 +125,7 @@
         },
         "vmSeriesImageVersion": {
             "type": "string",
-            "defaultValue": "latest",
+            "defaultValue": "None",
             "metadata": {
                 "description": "PAN OS Version"
             }
@@ -294,6 +294,13 @@
             "metadata": {
                 "description": "Name for default frontent on ELB."
             }
+        },
+        "customImageId": {
+            "type": "string",
+            "defaultValue": "None",
+            "metadata": {
+                "description": "string for custom image."
+            }
         }
     },
     "variables": {
@@ -305,6 +312,7 @@
         "pubIpURL" : "[concat(parameters('gitRepoUrl'),'/deployPublicIP.json')]",
         "elbIpURL" : "[concat(parameters('gitRepoUrl'),'/deployExternalLoadBalancer.json')]",
         "vmseriesURL" : "[concat(parameters('gitRepoUrl'),'/vmseries.json')]",
+        "vmseriesPrivateImageURL" : "[concat(parameters('gitRepoUrl'),'/vmseriesPrivateImage.json')]",
         "ilbURL" : "[concat(parameters('gitRepoUrl'),'/deployInternalLoadBalancer.json')]",
         "nsgURL" : "[concat(parameters('gitRepoUrl'),'/nsg-new.json')]",
         "customDataField": "[if(equals(parameters('customDataString'), 'None'), concat('storage-account=', parameters('bootstrapStorageAccount'), ',access-key=', parameters('bootstrapStorageAccountAccessKey'), ',file-share=', parameters('bootstrapFileShare'),',share-directory=', parameters('bootstrapSharedDir')), parameters('customDataString'))]"
@@ -504,6 +512,101 @@
             }
         },
         {
+            "condition": "[not(equals(parameters('customImageId'), 'None'))]",
+            "name": "InboundSetupVMSeriesPrivateImage",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/InboundSetupILB",
+                "Microsoft.Resources/deployments/InboundSetupELB"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vmseriesURL')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmssName": {
+                        "value": "[parameters('vmssName')]"
+                    },
+                    "vmSize": {
+                         "value": "[parameters('vmSeriesFirewallVmSize')]"
+                    },
+                    "vmScaleSetMinCount": {
+                        "value": "[parameters('vmScaleSetMinCount')]"
+                    },
+                    "vmScaleSetMaxCount": {
+                        "value": "[parameters('vmScaleSetMaxCount')]"
+                    },
+                    "vmSku": {
+                        "value": "[parameters('vmSeriesFirewallModel')]"
+                    },
+                    "adminUsername": {
+                         "value": "[parameters('username')]"
+                    },
+                    "adminPassword": {
+                         "value": "[parameters('password')]"
+                    },
+                    "customDataField": {
+                        "value": "[variables('customDataField')]"
+                    },
+                    "virtualNetworkName": {
+                         "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "deployIntoExistingVnet": {
+                        "value": "[parameters('deployIntoExistingVnet')]"
+                    },
+                    "subnetNameMgmt": {
+                        "value": "[parameters('mgmtSubnetName')]"
+                    },
+                    "subnetIDMgmt": {
+                        "value": "[parameters('mgmtSubnetID')]"
+                    },
+                    "subnetNameDataUntrust": {
+                        "value": "[parameters('untrustSubnetName')]"
+                    },
+                    "subnetIDDataUntrust": {
+                        "value": "[parameters('untrustSubnetID')]"
+                    },
+                    "subnetNameDataTrust": {
+                        "value": "[parameters('trustSubnetName')]"
+                    },
+                    "subnetIDDataTrust": {
+                        "value": "[parameters('trustSubnetID')]"
+                    },
+                    "fwIlbName": {
+                        "value": "[parameters('fwIlbName')]"
+                    },
+                    "appInsightsName": {
+                        "value": "[parameters('appInsightsName')]"
+                    },
+                    "autoScaleMetric": {
+                        "value": "[parameters('autoScaleMetric')]"
+                    },
+                    "scaleInThreshold": {
+                        "value": "[parameters('scaleInThreshold')]"
+                    },
+                    "scaleOutThreshold": {
+                        "value": "[parameters('scaleOutThreshold')]"
+                    },
+                    "randomString" : {
+                        "value" : "[parameters('randomString')]"
+                    },
+                    "zoneList" : {
+                        "value" : "[parameters('zoneList')]"
+                    },
+                    "fwElbName" : {
+                        "value" : "[parameters('fwElbName')]"
+                    },
+                    "customImageId" : {
+                        "value" : "[parameters('customImageId')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('customImageId'), 'None')]",
             "name": "InboundSetupVMSeries",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",

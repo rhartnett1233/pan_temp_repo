@@ -108,16 +108,28 @@
                 "description": "Management Subnet name"
             }
         },
-        "subnetNameData": {
+        "subnetNameDataUntrust": {
             "type": "string",
             "metadata": {
                 "description": "Untrust Subnet name"
             }
         },
-        "subnetIDData": {
+        "subnetIDDataUntrust": {
             "type": "string",
             "metadata": {
                 "description": "Untrust Subnet name"
+            }
+        },
+        "subnetNameDataTrust": {
+            "type": "string",
+            "metadata": {
+                "description": "Trust Subnet name"
+            }
+        },
+        "subnetIDDataTrust": {
+            "type": "string",
+            "metadata": {
+                "description": "Trust Subnet name"
             }
         },
         "fwIlbName": {
@@ -178,6 +190,12 @@
                 "description": "List of zones in region to deploys FWs."
             }
         },
+        "fwElbName": {
+            "type": "string",
+            "metadata": {
+                "description": "elb name."
+            }
+        },
         "customImageId": {
             "type": "string",
             "defaultValue": "None",
@@ -185,19 +203,23 @@
                 "description": "string for custom image."
             }
         }
+        
     },
     "variables": {
         "rgname": "[resourceGroup().id]",
-        "autoscaleName": "[concat('deployment-hub', parameters('randomString'))]",
+        "autoscaleName": "[concat('deployment-inbound', parameters('randomString'))]",
         "nicNameMgmt": "[concat('nicmgmt', parameters('randomString'))]",
-        "nicNameDataIntfc": "[concat('nicdata', parameters('randomString'))]",
-        "ipConfigNameData": "[concat('ipconfigdata', parameters('randomString'))]",
+        "nicNameDataUntrustIntfc": "[concat('nicdatauntrust', parameters('randomString'))]",
+        "nicNameDataTrustIntfc": "[concat('nicdatatrust', parameters('randomString'))]",
+        "ipConfigNameDataUntrust": "[concat('ipconfigdatauntrust', parameters('randomString'))]",
+        "ipConfigNameDataTrust": "[concat('ipconfigdatatrust', parameters('randomString'))]",
         "ipConfigNamemgmt": "[concat('ipconfigmgmt', parameters('randomString'))]",
         "imagePublisher": "paloaltonetworks",
         "imageOffer" : "vmseries-flex",
         "location": "[resourceGroup().location]",
         "tempMgmtSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameMgmt'))]",
-        "tempDataSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameData'))]",
+        "tempDataUntrustSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameDataUntrust'))]",
+        "tempDataTrustSubnetID" : "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetNameDataTrust'))]",
         "resourceGroupName": "[resourceGroup().name]",
         "scaleMetricMap": {
             "Data Plane CPU Utilization %": {
@@ -272,11 +294,10 @@
                         "dataDisks": [],
                         "imageReference": {
                             "id" : "[parameters('customImageId')]"
-
                         }
                     },
                     "osProfile": {
-                        "computerNamePrefix": "[concat('pavmhub', parameters('randomString'))]",
+                        "computerNamePrefix": "[concat('pavminbd', parameters('randomString'))]",
                         "adminUsername": "[parameters('adminUsername')]",
                         "adminPassword": "[parameters('adminPassword')]",
                         "customData": "[base64(parameters('customDataField'))]"
@@ -307,27 +328,48 @@
                             }
                         },
                         {
-                            "name": "[variables('nicNameDataIntfc')]",
+                            "name": "[variables('nicNameDataUntrustIntfc')]",
                             "properties": {
                                 "primary": "false",
                                 "enableAcceleratedNetworking": "true",
                                 "enableIPForwarding": "true",
                                 "ipConfigurations": [
                                 {
-                                    "name": "[variables('ipConfigNameData')]",
+                                    "name": "[variables('ipConfigNameDataUntrust')]",
                                     "properties": {
                                         "subnet": {
-                                            "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempDataSubnetID'), parameters('subnetIDData'))]"
+                                            "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempDataUntrustSubnetID'), parameters('subnetIDDataUntrust'))]"
                                         },
                                         "loadBalancerBackendAddressPools": [
                                             {
                                                 "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwIlbName'), '/backendAddressPools/fw-data-backend-pool')]"
+                                            },
+                                            {
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', parameters('fwElbName'), '/backendAddressPools/fw-elb-backend-pool')]"
                                             }
                                         ]
                                     }
                                 }]
                             }
+                        },
+                        {
+                            "name": "[variables('nicNameDataTrustIntfc')]",
+                            "properties": {
+                                "primary": "false",
+                                "enableAcceleratedNetworking": "true",
+                                "enableIPForwarding": "true",
+                                "ipConfigurations": [
+                                {
+                                    "name": "[variables('ipConfigNameDataTrust')]",
+                                    "properties": {
+                                        "subnet": {
+                                            "id" : "[if(equals(parameters('deployIntoExistingVnet'), 'No'), variables('tempDataTrustSubnetID'), parameters('subnetIDDataTrust'))]"
+                                        }
+                                    }
+                                }]
+                            }
                         }]
+
                     }
                 }
             }
