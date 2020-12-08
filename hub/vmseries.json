@@ -266,7 +266,7 @@
                         "maxBatchInstancePercent": 20,
                         "maxUnhealthyInstancePercent": 20,
                         "maxUnhealthyUpgradedInstancePercent": 51,
-                        "pauseTimeBetweenBatches": "PT120S"
+                        "pauseTimeBetweenBatches": "PT900S"
                     }
                 },
                 "virtualMachineProfile": {
