@@ -265,7 +265,7 @@
                     "rollingUpgradePolicy": {
                         "maxBatchInstancePercent": 20,
                         "maxUnhealthyInstancePercent": 20,
-                        "maxUnhealthyUpgradedInstancePercent": 51,
+                        "maxUnhealthyUpgradedInstancePercent": 20,
                         "pauseTimeBetweenBatches": "PT900S"
                     }
                 },
