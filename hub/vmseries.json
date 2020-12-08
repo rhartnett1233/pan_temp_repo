@@ -264,9 +264,9 @@
                     "mode": "Rolling",
                     "rollingUpgradePolicy": {
                         "maxBatchInstancePercent": 20,
-                        "maxUnhealthyInstancePercent": 50,
+                        "maxUnhealthyInstancePercent": 20,
                         "maxUnhealthyUpgradedInstancePercent": 50,
-                        "pauseTimeBetweenBatches": "PT0S"
+                        "pauseTimeBetweenBatches": "PT120S"
                     }
                 },
                 "virtualMachineProfile": {
