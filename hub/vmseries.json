@@ -265,8 +265,8 @@
                     "rollingUpgradePolicy": {
                         "maxBatchInstancePercent": 20,
                         "maxUnhealthyInstancePercent": 20,
-                        "maxUnhealthyUpgradedInstancePercent": 51,
-                        "pauseTimeBetweenBatches": "PT600S"
+                        "maxUnhealthyUpgradedInstancePercent": 20,
+                        "pauseTimeBetweenBatches": "PT0S"
                     }
                 },
                 "virtualMachineProfile": {
