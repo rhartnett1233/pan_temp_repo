@@ -264,7 +264,7 @@
                     "rollingUpgradePolicy": {
                         "maxBatchInstancePercent": 20,
                         "maxUnhealthyInstancePercent": 100,
-                        "maxUnhealthyUpgradedInstancePercent": 100,
+                        "maxUnhealthyUpgradedInstancePercent": 100
                         "pauseTimeBetweenBatches": "PT0S"
                     }
                 },
