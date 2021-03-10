@@ -255,7 +255,7 @@
                 "product": "[variables('imageOffer')]",
                 "publisher": "[variables('imagePublisher')]"
             },
-            "properties": {
+            "properties": { aadsfasdf
                 "overprovision": "false",
                 "singlePlacementGroup": "false",
                 "platformFaultDomainCount" : 1,
