@@ -255,7 +255,7 @@
                 "product": "[variables('imageOffer')]",
                 "publisher": "[variables('imagePublisher')]"
             },
-            "properties": { aadsfasdf
+            "properties": {
                 "overprovision": "false",
                 "singlePlacementGroup": "false",
                 "platformFaultDomainCount" : 1,
@@ -264,7 +264,7 @@
                     "rollingUpgradePolicy": {
                         "maxBatchInstancePercent": 20,
                         "maxUnhealthyInstancePercent": 100,
-                        "maxUnhealthyUpgradedInstancePercent": 100
+                        "maxUnhealthyUpgradedInstancePercent": 100,
                         "pauseTimeBetweenBatches": "PT0S"
                     }
                 },
