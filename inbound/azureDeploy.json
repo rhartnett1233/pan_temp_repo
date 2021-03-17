@@ -301,6 +301,20 @@
             "metadata": {
                 "description": "string for custom image."
             }
+        },
+        "maxUnhealthyInstancePercent": {
+            "type": "int",
+            "defaultValue": 100,
+            "metadata": {
+                "description": "percentage of max unhealthy instance."
+            }
+        },
+        "maxUnhealthyUpgradedInstancePercent": {
+            "type": "int",
+            "defaultValue": 100,
+            "metadata": {
+                "description": "percentage of max unhealthy upgraded instance."
+            }
         }
     },
     "variables": {
@@ -695,8 +709,13 @@
                     },
                     "fwElbName" : {
                         "value" : "[parameters('fwElbName')]"
-                    }
-                    
+                    },
+                    "maxUnhealthyInstancePercent" : {
+                        "value" : "[parameters('maxUnhealthyInstancePercent')]"
+                    },
+                    "maxUnhealthyUpgradedInstancePercent" : {
+                        "value" : "[parameters('maxUnhealthyUpgradedInstancePercent')]"
+                    }       
                 }
             }
         }

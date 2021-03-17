@@ -257,7 +257,22 @@
             "metadata": {
                 "description": "string for custom image."
             }
+        },
+        "maxUnhealthyInstancePercent": {
+            "type": "int",
+            "defaultValue": 100,
+            "metadata": {
+                "description": "percentage of max unhealthy instance."
+            }
+        },
+        "maxUnhealthyUpgradedInstancePercent": {
+            "type": "int",
+            "defaultValue": 100,
+            "metadata": {
+                "description": "percentage of max unhealthy upgraded instance."
+            }
         }
+
     },
     "variables": {
         "location" : "[resourceGroup().location]",
@@ -448,6 +463,12 @@
                     },
                     "customImageId" : {
                         "value" : "[parameters('customImageId')]"
+                    },
+                    "maxUnhealthyInstancePercent" : {
+                        "value" : "[parameters('maxUnhealthyInstancePercent')]"
+                    },
+                    "maxUnhealthyUpgradedInstancePercent" : {
+                        "value" : "[parameters('maxUnhealthyUpgradedInstancePercent')]"
                     }
                 }
             }
@@ -534,6 +555,12 @@
                     },
                     "zoneList" : {
                         "value" : "[parameters('zoneList')]"
+                    },
+                    "maxUnhealthyInstancePercent" : {
+                        "value" : "[parameters('maxUnhealthyInstancePercent')]"
+                    },
+                    "maxUnhealthyUpgradedInstancePercent" : {
+                        "value" : "[parameters('maxUnhealthyUpgradedInstancePercent')]"
                     }
                 }
             }

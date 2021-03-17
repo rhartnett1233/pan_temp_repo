@@ -184,6 +184,18 @@
             "metadata": {
                 "description": "string for custom image."
             }
+        },
+        "maxUnhealthyInstancePercent" : {
+            "type" : "int",
+            "metadata": {
+                "description": "Percentage of max unhealthy instance."
+            }
+        },
+        "maxUnhealthyUpgradedInstancePercent" : {
+            "type" : "int",
+            "metadata": {
+                "description": "Percentage of max unhealthy upgraded instance."
+            }
         }
     },
     "variables": {
@@ -263,8 +275,8 @@
                     "mode": "Rolling",
                     "rollingUpgradePolicy": {
                         "maxBatchInstancePercent": 20,
-                        "maxUnhealthyInstancePercent": 100,
-                        "maxUnhealthyUpgradedInstancePercent": 100,
+                        "maxUnhealthyInstancePercent": "[parameters('maxUnhealthyInstancePercent')]",
+                        "maxUnhealthyUpgradedInstancePercent": "[parameters('maxUnhealthyUpgradedInstancePercent')]",
                         "pauseTimeBetweenBatches": "PT0S"
                     }
                 },
